@@ -55,6 +55,7 @@ def render(md, slug):
     sec_open = False
     title = None
     meta = []
+    preamble = True          # 첫 소제목 전까지가 머리말 구간
 
     def close_sec():
         nonlocal sec_open
@@ -90,6 +91,7 @@ def render(md, slug):
 
         if s.startswith('## '):
             close_sec()
+            preamble = False
             h = s[3:].strip()
             m = re.match(r'^([0-9]+)\.\s+(.*)$', h)
             if m:
@@ -117,8 +119,9 @@ def render(md, slug):
             out.append(f'<h4>{inline(s[5:],ids)}</h4>'); i += 1; continue
 
         if s.startswith('### '):
+            preamble = False
             h = s[4:].strip()
-            if h == '이 장의 좌표':
+            if re.fullmatch(r'이 (장|막간)의 좌표', h):
                 # 다음 표를 좌표 박스로
                 i += 1
                 while i < n and not L[i].strip().startswith('|'): i += 1
@@ -127,7 +130,7 @@ def render(md, slug):
                     rows.append(cells(L[i])); i += 1
                 body = ''.join(f'<dt>{inline(r[0],ids)}</dt><dd>{inline(r[1],ids)}</dd>'
                                for r in rows[2:] if len(r) >= 2)
-                out.append(f'<div class="coord"><h2>이 장의 좌표</h2><dl>{body}</dl></div>')
+                out.append(f'<div class="coord"><h2>{inline(h,ids)}</h2><dl>{body}</dl></div>')
                 continue
             if h.endswith('요약 카드') or h.endswith('한 장 정리'):
                 out.append(f'<h3 class="cardhead">{inline(h,ids)}</h3>'); i += 1; continue
@@ -158,7 +161,7 @@ def render(md, slug):
             while i < n and L[i].strip().startswith('>'):
                 buf.append(re.sub(r'^\s*>\s?', '', L[i])); i += 1
             txt = '\n'.join(buf).strip()
-            if not title and not sec_open and ('적용 범위' in txt or '제1부' in txt or '제2부' in txt):
+            if preamble and not sec_open and ('적용 범위' in txt or re.search(r'제\d부', txt)):
                 meta.append(txt); continue
             cls = 'callout'
             if txt.startswith('###'):
@@ -206,10 +209,13 @@ files = sorted(glob.glob(os.path.join(ROOT, '원고', '*', '*.md')),
 chapters = []
 for f in files:
     md = open(f, encoding='utf-8').read()
-    slug = 'ch' + re.match(r'(\d+)', os.path.basename(f)).group(1)
+    sm = re.match(r'(\d+)장?([A-Za-z])?', os.path.basename(f))
+    slug = 'ch' + sm.group(1) + (sm.group(2) or '').lower()
     title, meta, body = render(md, slug)
     num = re.match(r'(\d+)장', title).group(1) if re.match(r'\d+장', title) else ''
     name = title.split('·', 1)[1].strip() if '·' in title else title
+    # 번호 없는 막간은 제목 앞머리('막간')를 배지로 쓴다
+    badge = num if num else title.split('·', 1)[0].strip()
     part = ''
     if meta:
         m = re.search(r'\*\*(제\d부[^*]*)\*\*', meta[0])
@@ -218,16 +224,18 @@ for f in files:
     if meta:
         m = re.search(r'\*\*적용 범위\*\*\s*(.*)', meta[0])
         if m: scope = re.sub(r'\*\*|·\s*$', '', m.group(1)).strip()
-    chapters.append(dict(slug=slug, num=num, name=name, part=part, scope=scope, body=body))
+    chapters.append(dict(slug=slug, num=num, name=name, part=part,
+                         scope=scope, badge=badge, body=body))
 
-print(str(len(chapters)) + ' chapters: ' + ', '.join(c['num'] + '장' for c in chapters))
+print(str(len(chapters)) + ' sections: '
+      + ', '.join((c['num'] + '장' if c['num'] else c['badge']) for c in chapters))
 
 # ---------- 템플릿 ----------
 CSS = open(os.path.join(ROOT, 'tools', 'reader.css'), encoding='utf-8').read()
 
 nav = ''.join(
     '<button class="tab" data-go="%s"><b>%s</b><span>%s</span></button>'
-    % (c['slug'], c['num'], c['name']) for c in chapters)
+    % (c['slug'], c['badge'], c['name']) for c in chapters)
 
 parts, seen = [], None
 for c in chapters:
@@ -236,11 +244,13 @@ for c in chapters:
         seen = c['part']
         pl = '<div class="partline"><i></i>%s</div>' % c['part']
     scope = ('<p class="scope"><b>적용 범위</b> &nbsp;%s</p>' % c['scope']) if c['scope'] else ''
+    chno = (('<p class="chno">%02d<span>장</span></p>' % int(c['num'])) if c['num']
+            else ('<p class="chno alt">%s</p>' % html.escape(c['badge'])))
     parts.append(
         '<article id="%s" class="chap"><header class="mast"><div class="wrap"><div class="col">'
-        '%s<p class="chno">%02d<span>장</span></p><h1>%s</h1>%s'
+        '%s%s<h1>%s</h1>%s'
         '</div></div></header><main class="wrap">%s</main></article>'
-        % (c['slug'], pl, int(c['num']), c['name'], scope, c['body']))
+        % (c['slug'], pl, chno, c['name'], scope, c['body']))
 
 SCRIPT = open(os.path.join(ROOT, 'tools', 'reader.js'), encoding='utf-8').read()
 

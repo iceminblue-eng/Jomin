@@ -281,3 +281,6 @@ td input.fill{min-width:7rem}
 .dia input.fill.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;
   min-width:0;padding:0 2px;vertical-align:baseline;border-bottom:1px solid var(--rule-2)}
 .dia input.tick{width:13px;height:13px;vertical-align:-1px;margin:0 4px 0 0}
+
+/* 번호 없는 막간의 배지 */
+.chno.alt{font-size:38px;letter-spacing:.02em}
