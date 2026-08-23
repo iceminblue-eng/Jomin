@@ -19,12 +19,28 @@ def inline(t, ids):
     def blank(m):
         ids[0] += 1
         return f'<input class="fill" type="text" data-k="{ids[1]}-{ids[0]}">'
-    t = re.sub(r'_{4,}', blank, t)
+    t = re.sub(r'_{3,}', blank, t)
     # 체크박스
     def box(m):
         ids[0] += 1
         return f'<input class="tick" type="checkbox" data-k="{ids[1]}-{ids[0]}">'
     t = t.replace('☐', '\x00')
+    t = re.sub('\x00', box, t)
+    return t
+
+def fence_fill(t, ids):
+    """코드펜스(진단 시트) 안의 ☐ / ____ 도 워크북 입력으로 바꾼다."""
+    t = html.escape(t)
+    def blank(m):
+        ids[0] += 1
+        w = min(max(len(m.group(0)), 4), 40)
+        return (f'<input class="fill mono" type="text" style="width:{w}ch" '
+                f'data-k="{ids[1]}-{ids[0]}">')
+    t = re.sub(r'_{3,}', blank, t)
+    def box(m):
+        ids[0] += 1
+        return f'<input class="tick" type="checkbox" data-k="{ids[1]}-{ids[0]}">'
+    t = t.replace('\u2610', '\x00')
     t = re.sub('\x00', box, t)
     return t
 
@@ -57,9 +73,10 @@ def render(md, slug):
         if s.startswith('```'):
             i += 1; buf = []
             while i < n and not L[i].strip().startswith('```'):
-                buf.append(html.escape(L[i])); i += 1
+                buf.append(L[i]); i += 1
             i += 1
-            out.append('<div class="scroll"><pre class="dia">' + '\n'.join(buf) + '</pre></div>')
+            out.append('<div class="scroll"><pre class="dia">'
+                       + fence_fill('\n'.join(buf), ids) + '</pre></div>')
             continue
 
         # 구분선

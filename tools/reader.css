@@ -276,3 +276,8 @@ input.fill{font-family:var(--serif);font-size:15px;color:var(--ink);background:t
 input.fill:focus{border-bottom-color:var(--pine);outline:none}
 input.tick{accent-color:var(--pine);width:15px;height:15px;vertical-align:-2px;margin:0 5px 0 0}
 td input.fill{min-width:7rem}
+
+/* 진단 시트(코드펜스) 안의 워크북 입력 */
+.dia input.fill.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;
+  min-width:0;padding:0 2px;vertical-align:baseline;border-bottom:1px solid var(--rule-2)}
+.dia input.tick{width:13px;height:13px;vertical-align:-1px;margin:0 4px 0 0}
