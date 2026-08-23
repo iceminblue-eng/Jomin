@@ -240,7 +240,7 @@ nav = ''.join(
 parts, seen = [], None
 for c in chapters:
     pl = ''
-    if c['part'] != seen:
+    if c['part'] and c['part'] != seen:
         seen = c['part']
         pl = '<div class="partline"><i></i>%s</div>' % c['part']
     scope = ('<p class="scope"><b>적용 범위</b> &nbsp;%s</p>' % c['scope']) if c['scope'] else ''
