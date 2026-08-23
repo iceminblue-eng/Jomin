@@ -245,7 +245,7 @@ for c in chapters:
 SCRIPT = open(os.path.join(ROOT, 'tools', 'reader.js'), encoding='utf-8').read()
 
 doc = (
-'<title>관계가 아니라 구조로</title>\n'
+'<title>관리자론 — 헤어살롱 편</title>\n'
 '<link rel="preconnect" href="https://fonts.googleapis.com">\n'
 '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
 '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700'
@@ -258,7 +258,7 @@ doc = (
 + ''.join(parts) +
 '\n<footer><div class="wrap">'
 '<p><b>관리자론 — 헤어살롱 편</b><br>미용 시장 관리자 운용 바이블</p>'
-'<p>원본 「운영 관리자 · 매트릭스 대입 수업」 강의안<br>단행본 원고 · 집필 진행 중</p>'
+'<p>원본 「운영 관리자 · 매트릭스 대입 수업」 강의안<br>단행본 원고 · 전 30장 초고 완료</p>'
 '</div></footer>\n'
 '<script>' + SCRIPT + '</script>\n')
 
