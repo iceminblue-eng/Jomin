@@ -42,6 +42,7 @@ tools/
   fix_opc.py          docx OPC 파트 순서 교정
   build_print.py      원고 → 인쇄용 HTML
   pdf.js              인쇄용 HTML → PDF (Chromium)
+  make_bundle.py      배포용 묶음(zip) 생성
   reader.css / reader.js
 build/
   reader.html                    워크북 리더 — 아티팩트로 발행
@@ -49,6 +50,7 @@ build/
   관리자론-헤어살롱편.docx         Word 원고 — 출판사 · 편집자용
   관리자론-헤어살롱편.pdf          조판 PDF (400쪽)
   관리자론-헤어살롱편-인쇄.html     PDF 생성용 중간 산출물
+  관리자론-헤어살롱편.zip          배포용 묶음 (git 미추적 — 내용물이 개별 추적됨)
 ```
 
 **전체 빌드:** `bash tools/build_all.sh`

@@ -1,2 +1,6 @@
+# 빌드 중간 산출물
 build/chapters.json
-build/chapters.json
+
+# 배포용 묶음 — 내용물이 모두 개별 추적되므로 커밋하지 않는다
+# (tools/build_all.sh 가 재생성)
+build/*.zip
