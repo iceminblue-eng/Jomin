@@ -1,0 +1,448 @@
+<title>관리자론 재구성 대조표</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --paper:#F1F3F0; --surface:#FFFFFF; --surface-2:#E9ECE8;
+  --ink:#17201C; --ink-2:#4C574F; --ink-3:#78837B;
+  --rule:#D2D8D1; --rule-2:#BFC7BE;
+  --pine:#12483A; --pine-soft:#E2EBE6; --pine-line:#9FC2B3;
+  --ok:#26644A; --ok-bg:#E3EFE7;
+  --warn:#7E6415; --warn-bg:#F2EBD6;
+  --stop:#8A3030; --stop-bg:#F3E2E1;
+  --shadow:0 1px 2px rgba(23,32,28,.05), 0 8px 24px -16px rgba(23,32,28,.28);
+  --serif:'Gowun Batang','Noto Serif KR','Apple SD Gothic Neo',serif;
+  --sans:'IBM Plex Sans KR','Pretendard','Apple SD Gothic Neo',-apple-system,sans-serif;
+  --measure:41rem; --wide:60rem;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F1512; --surface:#161E1A; --surface-2:#1D2622;
+    --ink:#E6EDE8; --ink-2:#A9B5AD; --ink-3:#7C8880;
+    --rule:#2A3630; --rule-2:#3A483F;
+    --pine:#79C6A7; --pine-soft:#1B2A24; --pine-line:#3A5C4E;
+    --ok:#6FBF95; --ok-bg:#16281F;
+    --warn:#D2B463; --warn-bg:#2A2415;
+    --stop:#D98B84; --stop-bg:#2C1A19;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0F1512; --surface:#161E1A; --surface-2:#1D2622;
+  --ink:#E6EDE8; --ink-2:#A9B5AD; --ink-3:#7C8880;
+  --rule:#2A3630; --rule-2:#3A483F;
+  --pine:#79C6A7; --pine-soft:#1B2A24; --pine-line:#3A5C4E;
+  --ok:#6FBF95; --ok-bg:#16281F;
+  --warn:#D2B463; --warn-bg:#2A2415;
+  --stop:#D98B84; --stop-bg:#2C1A19;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);
+  font-size:16px;line-height:1.8;margin:0;padding-block:0 clamp(48px,8vw,96px);padding-left:20px;padding-right:20px;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--wide);margin:0 auto}
+.narrow{max-width:var(--measure)}
+
+/* ---- masthead ---- */
+header.mast{padding-block:clamp(38px,6vw,64px) clamp(26px,4vw,38px);border-bottom:2px solid var(--pine)}
+.eyebrow{font-family:var(--sans);font-size:11.5px;font-weight:600;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--pine);margin:0 0 14px}
+h1{font-family:var(--sans);font-weight:700;font-size:clamp(26px,4.4vw,40px);line-height:1.3;
+  letter-spacing:-.025em;margin:0 0 16px;text-wrap:balance;color:var(--ink)}
+.lede{font-size:clamp(15px,1.7vw,17.5px);color:var(--ink-2);margin:0;max-width:var(--measure);line-height:1.85}
+.lede b{color:var(--ink);font-weight:700}
+
+/* ---- figure strip ---- */
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:1px;
+  background:var(--rule);border:1px solid var(--rule);margin:clamp(28px,4vw,40px) 0 0}
+.fig{background:var(--surface);padding:16px 18px}
+.fig dt{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.07em;
+  color:var(--ink-3);margin:0 0 6px;text-transform:uppercase}
+.fig dd{margin:0;font-family:var(--sans);font-size:23px;font-weight:700;color:var(--pine);
+  letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.25}
+.fig dd small{font-size:12.5px;font-weight:500;color:var(--ink-2);letter-spacing:0;margin-left:5px}
+
+/* ---- sections ---- */
+section{padding-block:clamp(40px,6vw,64px) 0}
+h2{font-family:var(--sans);font-weight:700;font-size:clamp(19px,2.4vw,24px);line-height:1.4;
+  letter-spacing:-.02em;margin:0 0 6px;color:var(--ink);text-wrap:balance}
+h2 .n{color:var(--pine);font-variant-numeric:tabular-nums;margin-right:10px}
+.sub{font-family:var(--sans);font-size:13.5px;color:var(--ink-2);margin:0 0 22px;max-width:var(--measure);line-height:1.7}
+h3{font-family:var(--sans);font-weight:600;font-size:15px;margin:30px 0 10px;color:var(--ink);letter-spacing:-.01em}
+p{margin:0 0 14px;max-width:var(--measure)}
+.note{background:var(--pine-soft);border-left:3px solid var(--pine-line);padding:14px 18px;
+  margin:20px 0;font-size:14.5px;line-height:1.75;color:var(--ink-2);max-width:var(--measure)}
+.note b{color:var(--ink)}
+.note.warn{background:var(--warn-bg);border-left-color:var(--warn)}
+
+/* ---- tables ---- */
+.scroll{overflow-x:auto;margin:0 0 8px;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;line-height:1.6}
+th,td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--rule);vertical-align:top}
+thead th{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink-2);background:var(--surface-2);
+  border-bottom:1px solid var(--rule-2);position:sticky;top:0;white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+td.num,th.num{font-family:var(--sans);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.old{font-family:var(--sans);font-weight:600;color:var(--ink-2);width:1%}
+td.arrow{color:var(--ink-3);width:1%;padding-inline:2px;text-align:center}
+td.new{font-family:var(--sans);font-weight:700;color:var(--pine);width:1%;white-space:nowrap}
+td.pct{font-family:var(--sans);font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink);white-space:nowrap}
+.vol{display:inline-block;font-family:var(--sans);font-size:10.5px;font-weight:700;
+  padding:1px 6px;border-radius:2px;background:var(--pine-soft);color:var(--pine);margin-right:7px}
+tr.sec td{background:var(--surface-2);font-family:var(--sans);font-size:11.5px;font-weight:600;
+  letter-spacing:.05em;color:var(--pine);text-transform:none;padding-block:7px}
+
+/* chips */
+.chip{display:inline-block;font-family:var(--sans);font-size:10.5px;font-weight:600;
+  padding:1.5px 7px;border-radius:2px;white-space:nowrap}
+.chip.keep{background:var(--ok-bg);color:var(--ok)}
+.chip.read{background:var(--warn-bg);color:var(--warn)}
+.chip.new{background:var(--pine-soft);color:var(--pine)}
+.chip.gone{background:var(--stop-bg);color:var(--stop)}
+
+/* find/replace blocks */
+.rule-card{border:1px solid var(--rule);background:var(--surface);padding:16px 18px;margin:0 0 12px}
+.rule-card h4{font-family:var(--sans);font-size:13.5px;font-weight:700;margin:0 0 8px;color:var(--ink)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;
+  background:var(--surface-2);color:var(--ink);padding:1px 5px;border-radius:2px;white-space:nowrap}
+.xform{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:13px;
+  font-family:var(--sans);color:var(--ink-2);margin:5px 0}
+.xform .to{color:var(--ink-3)}
+
+/* filter */
+.filter{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 14px}
+.filter input{font-family:var(--sans);font-size:13.5px;padding:7px 11px;border:1px solid var(--rule-2);
+  background:var(--surface);color:var(--ink);border-radius:2px;min-width:0;width:min(280px,100%)}
+.filter input:focus-visible{outline:2px solid var(--pine);outline-offset:1px;border-color:var(--pine)}
+.filter .count{font-family:var(--sans);font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+
+footer{margin-top:clamp(48px,7vw,80px);padding-top:24px;border-top:1px solid var(--rule);
+  font-family:var(--sans);font-size:12.5px;color:var(--ink-3);line-height:1.8}
+footer b{color:var(--ink-2);font-weight:600}
+:focus-visible{outline:2px solid var(--pine);outline-offset:2px}
+@media (max-width:520px){
+  th,td{padding:8px 10px;font-size:12.5px}
+  .figs{grid-template-columns:1fr 1fr}
+}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <p class="eyebrow">편집자 인수인계 · 관리자론 — 헤어살롱 편</p>
+  <h1>30장 한 권에서 세 권으로 — 무엇이 바뀌었는가</h1>
+  <p class="lede">기존 구성으로 작업하시던 원고를 새 구성에 맞추실 때 필요한 대조표입니다.
+  결론부터 말씀드리면 <b>본문 산문은 거의 그대로입니다.</b> 바뀐 1,040줄 중 <b>87%가 장 번호·부 표기·제목</b>이고,
+  실제로 문장이 달라진 곳은 <b>90줄</b>뿐입니다. 그 90줄이 어디인지도 아래에 전부 적어 두었습니다.</p>
+
+  <dl class="figs">
+    <div class="fig"><dt>원문</dt><dd>30<small>장 · 1권</small></dd></div>
+    <div class="fig"><dt>현재</dt><dd>51<small>절 · 3권</small></dd></div>
+    <div class="fig"><dt>신규 집필</dt><dd>17<small>편</small></dd></div>
+    <div class="fig"><dt>부록 실물</dt><dd>14<small>종</small></dd></div>
+    <div class="fig"><dt>문장 수정</dt><dd>90<small>줄</small></dd></div>
+  </dl>
+</header>
+
+<section>
+  <h2><span class="n">1</span>권 경계와 장 번호</h2>
+  <p class="sub">원문 1~12장은 번호가 그대로입니다. 13장부터는 각 권에서 1장으로 다시 시작합니다.</p>
+
+  <div class="filter">
+    <label for="q" style="font-family:var(--sans);font-size:13px;color:var(--ink-2)">찾기</label>
+    <input id="q" type="text" placeholder="장 번호 또는 제목 (예: 22, 변수, 양성)" autocomplete="off">
+    <span class="count" id="cnt">31개 전부 표시</span>
+  </div>
+
+  <div class="scroll">
+    <table id="map">
+      <thead><tr>
+        <th class="num">원문</th><th></th><th class="num">새 위치</th>
+        <th>제목</th><th>섹션</th><th>본문</th>
+      </tr></thead>
+      <tbody>
+        <tr class="sec"><td colspan="6">1권 · 기준과 진단 — 우리 살롱에 맞는 관리자 모델을 설계하다</td></tr>
+        <tr><td class="old">1장</td><td class="arrow">→</td><td class="new"><span class="vol">1권</span>1장</td><td>규모가 커지면 관계가 아니라 구조로 운영해야 한다</td><td>A</td><td><span class="chip keep">그대로</span></td></tr>
+        <tr><td class="old">2장</td><td class="arrow">→</td><td class="new"><span class="vol">1권</span>2장</td><td>원장·관리자·팀원의 역할은 어떻게 달라야 하는가</td><td>A</td><td><span class="chip keep">그대로</span></td></tr>
+        <tr><td class="old">3장</td><td class="arrow">→</td><td class="new"><span class="vol">1권</span>3장</td><td>운영 관리자의 성과는 개인 매출만으로 평가할 수 없다</td><td>A</td><td><span class="chip read">2줄</span></td></tr>
+        <tr><td class="old">4장</td><td class="arrow">→</td><td class="new"><span class="vol">1권</span>4장</td><td>경우의 수가 많을수록 상수를 굵게 만들어라</td><td>B</td><td><span class="chip read">1줄</span></td></tr>
+        <tr><td class="old">5장</td><td class="arrow">→</td><td class="new"><span class="vol">1권</span>5장</td><td>구조 좌표: 규모·상권·지점 수가 운영 방식을 결정한다</td><td>B</td><td><span class="chip read">1줄</span></td></tr>
+        <tr><td class="old">6장</td><td class="arrow">→</td><td class="new"><span class="vol">1권</span>6장</td><td>조직 좌표: 인원수와 구성원 조합을 읽어라</td><td>B</td><td><span class="chip keep">그대로</span></td></tr>
+        <tr><td class="old">7장</td><td class="arrow">→</td><td class="new"><span class="vol">1권</span>7장</td><td>사람 좌표: 원장·관리자·구성원의 프로필을 읽어라</td><td>B</td><td><span class="chip keep">그대로</span></td></tr>
+        <tr><td class="old">8장</td><td class="arrow">→</td><td class="new"><span class="vol">1권</span>8장</td><td>진단 인테이크로 살롱의 운영 코드를 만든다</td><td>B</td><td><span class="chip read">2줄</span></td></tr>
+        <tr><td class="old">막간</td><td class="arrow">→</td><td class="new"><span class="vol">1권</span>막간</td><td>우리 매장 상수 헌장 10선 <span style="color:var(--ink-3)">— 8장 바로 뒤 유지</span></td><td>B</td><td><span class="chip read">11줄</span></td></tr>
+        <tr><td class="old">9장</td><td class="arrow">→</td><td class="new"><span class="vol">1권</span>9장</td><td>선수형 관리자: 현장 성과로 리더십을 증명하는 사람</td><td>C</td><td><span class="chip keep">그대로</span></td></tr>
+        <tr><td class="old">10장</td><td class="arrow">→</td><td class="new"><span class="vol">1권</span>10장</td><td>오피스형 관리자: 시스템과 숫자로 성과를 만드는 사람</td><td>C</td><td><span class="chip read">1줄</span></td></tr>
+        <tr><td class="old">11장</td><td class="arrow">→</td><td class="new"><span class="vol">1권</span>11장</td><td>복수·혼합형 관리자: 두 유형을 경쟁시키지 않고 결합하라</td><td>C</td><td><span class="chip read">2줄</span></td></tr>
+        <tr><td class="old">12장</td><td class="arrow">→</td><td class="new"><span class="vol">1권</span>12장</td><td>우리 살롱의 관리자 모델을 결정하는 법</td><td>C</td><td><span class="chip read">1줄</span></td></tr>
+
+        <tr class="sec"><td colspan="6">2권 · 권한과 운영 — 관리자가 일하고 시스템이 돌아가는 매장을 만들다</td></tr>
+        <tr><td class="old">13장</td><td class="arrow">→</td><td class="new"><span class="vol">2권</span>1장</td><td>원장과 관리자의 관계: 권한 없는 책임을 만들지 마라</td><td>A</td><td><span class="chip keep">그대로</span></td></tr>
+        <tr><td class="old">14장</td><td class="arrow">→</td><td class="new"><span class="vol">2권</span>2장</td><td>팀원과의 관계: 권위가 아니라 예측 가능성을 제공하라</td><td>A</td><td><span class="chip read">2줄</span></td></tr>
+        <tr><td class="old">15장</td><td class="arrow">→</td><td class="new"><span class="vol">2권</span>3장</td><td>기술 리더와 운영 리더를 연결하라</td><td>A</td><td><span class="chip read">1줄</span></td></tr>
+        <tr><td class="old">16장</td><td class="arrow">→</td><td class="new"><span class="vol">2권</span>4장</td><td>중간에 낀 관리자의 갈등 조정법</td><td>A</td><td><span class="chip read">1줄</span></td></tr>
+        <tr><td class="old">17장</td><td class="arrow">→</td><td class="new"><span class="vol">2권</span>5장</td><td>하루의 운영 리듬: 오픈 · 피크 · 마감</td><td>B</td><td><span class="chip keep">그대로</span></td></tr>
+        <tr><td class="old">18장</td><td class="arrow">→</td><td class="new"><span class="vol">2권</span>6장</td><td>고객 운영: 불러오고, 만족시키고, 유지시켜라</td><td>B</td><td><span class="chip read">1줄</span></td></tr>
+        <tr><td class="old">19장</td><td class="arrow">→</td><td class="new"><span class="vol">2권</span>7장</td><td>선수 운영: 채용부터 이탈까지 관리하라</td><td>B</td><td><span class="chip keep">그대로</span></td></tr>
+        <tr><td class="old">20장</td><td class="arrow">→</td><td class="new"><span class="vol">2권</span>8장</td><td>숫자·돈·자원: 감이 아닌 데이터로 운영하라</td><td>B</td><td><span class="chip read">1줄</span></td></tr>
+        <tr><td class="old">21장</td><td class="arrow">→</td><td class="new"><span class="vol">2권</span>9장</td><td>보고와 회의: 결산에서 액션플랜까지</td><td>B</td><td><span class="chip keep">그대로</span></td></tr>
+        <tr><td class="old">22장</td><td class="arrow">→</td><td class="new"><span class="vol">2권</span>10장</td><td>변수 대응: 규정과 현장 사이의 판단 기준</td><td>B</td><td><span class="chip read">2줄</span></td></tr>
+
+        <tr class="sec"><td colspan="6">3권 · 확장과 양성 — 사람이 바뀌어도 이어지는 운영을 설계하다</td></tr>
+        <tr><td class="old">23장</td><td class="arrow">→</td><td class="new"><span class="vol">3권</span>1장</td><td>표준화와 현지화를 동시에 설계하라</td><td>A</td><td><span class="chip keep">그대로</span></td></tr>
+        <tr><td class="old">24장</td><td class="arrow">→</td><td class="new"><span class="vol">3권</span>2장</td><td>본사·원장·지점 관리자 사이의 거버넌스</td><td>A</td><td><span class="chip keep">그대로</span></td></tr>
+        <tr><td class="old">25장</td><td class="arrow">→</td><td class="new"><span class="vol">3권</span>3장</td><td>지점 비교는 순위가 아니라 학습을 위해 사용하라</td><td>A</td><td><span class="chip keep">그대로</span></td></tr>
+        <tr><td class="old">26장</td><td class="arrow">→</td><td class="new"><span class="vol">3권</span>4장</td><td>좋은 직원을 바로 관리자로 승진시키지 마라</td><td>B</td><td><span class="chip read">2줄</span></td></tr>
+        <tr><td class="old">27장</td><td class="arrow">→</td><td class="new"><span class="vol">3권</span>5장</td><td>6개월 운영 관리자 양성 과정</td><td>B</td><td><span class="chip keep">그대로</span></td></tr>
+        <tr><td class="old">28장</td><td class="arrow">→</td><td class="new"><span class="vol">3권</span>6장</td><td>평가 · 보상 · 커리어 — 관리자도 성장 경로가 필요하다</td><td>B</td><td><span class="chip read">1줄</span></td></tr>
+        <tr><td class="old">29장</td><td class="arrow">→</td><td class="new"><span class="vol">3권</span>7장</td><td>살롱 케이스별 운영 관리자 처방</td><td>C</td><td><span class="chip read">15줄</span></td></tr>
+        <tr><td class="old">30장</td><td class="arrow">→</td><td class="new"><span class="vol">3권</span>8장</td><td>90일 운영 관리자 시스템 구축 로드맵</td><td>C</td><td><span class="chip read">2줄</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="sub" style="margin-top:10px">본문 열의 숫자는 <b>참조·제목을 뺀 순수 문장 수정 줄 수</b>입니다. 그 줄이 무엇인지는 3절에 있습니다.</p>
+
+  <div class="note"><b>원문 8개 부는 권 안의 '섹션'으로 바뀌었습니다.</b>
+  '3부작의 3부'와 '원문 제3부'가 혼동되기 때문입니다. 1부→1권 섹션 A, 2부→1권 섹션 B, 3부→1권 섹션 C,
+  4부→2권 섹션 A, 5부→2권 섹션 B, 6부→3권 섹션 A, 7부→3권 섹션 B, 8부→3권 섹션 C로 1:1 대응합니다.</div>
+</section>
+
+<section>
+  <h2><span class="n">2</span>바뀐 1,040줄의 성격</h2>
+  <p class="sub">재구성 전 원고와 현재 원고를 줄 단위로 대조한 결과입니다.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>무엇이 바뀌었나</th><th class="num">줄</th><th class="num">비중</th><th>편집자가 할 일</th></tr></thead>
+      <tbody>
+        <tr><td>장 번호 · 부 표기 참조</td><td class="pct">714</td><td class="pct">68.7%</td><td>찾아 바꾸기로 처리 가능 (4절 규칙)</td></tr>
+        <tr><td>제목 줄 — 장 번호 재부여</td><td class="pct">163</td><td class="pct">15.7%</td><td>대조표대로 번호만 교체</td></tr>
+        <tr><td><b>문장 수정</b></td><td class="pct">90</td><td class="pct">8.7%</td><td><b>직접 읽고 대조 — 3절에 전부 열거</b></td></tr>
+        <tr><td>머리말 인용 블록 (권 · 섹션 표기)</td><td class="pct">42</td><td class="pct">4.0%</td><td>절마다 한 줄, 형식 고정</td></tr>
+        <tr><td>부록 참조 (문자 → 권별 숫자)</td><td class="pct">31</td><td class="pct">3.0%</td><td>6절 대조표</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note"><b>본문 산문은 손대지 않았습니다.</b> 사례, 상수 문장, 판정 수치, 표의 값은 전부 원문 그대로입니다.
+  기존 원고에 넣으신 교정은 대부분 그대로 살아 있습니다.</div>
+</section>
+
+<section>
+  <h2><span class="n">3</span>문장이 실제로 바뀐 90줄</h2>
+  <p class="sub">이 목록이 전부입니다. 여기 없는 곳은 참조·제목만 바뀌었습니다.</p>
+
+  <h3>덩어리로 바뀐 네 곳</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>위치</th><th class="num">줄</th><th>바뀐 이유</th></tr></thead>
+      <tbody>
+        <tr><td><b>3권 에필로그</b></td><td class="pct">24</td><td>기존 닫는 글 「데뷔 첫 손님」을 흡수해 세 권을 닫는 글로 재집필</td></tr>
+        <tr><td><b>3권 7장</b> (원 29장)</td><td class="pct">15</td><td>"1~28장의 모든 도구" 같은 단권 전제 표현을 세 권 기준으로 교체</td></tr>
+        <tr><td><b>1권 총서문</b></td><td class="pct">13</td><td>기존 여는 글을 시리즈 총서문으로 재편 — 강의 출처 단락을 세 권 소개로 교체</td></tr>
+        <tr><td><b>1권 막간</b></td><td class="pct">11</td><td>"30장까지 미루면"처럼 마지막 장을 가리키던 표현을 "3권 마지막 장"으로</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>한두 줄씩 바뀐 곳 — 유형은 셋뿐입니다</h3>
+  <div class="rule-card">
+    <h4>① 워크숍 표의 '공유' 행 (12개 장)</h4>
+    <div class="xform"><code>조별 발표</code><span class="to">→</span><code>공동 발표</code></div>
+    <div class="xform"><code>조원에게</code><span class="to">→</span><code>함께 보는 사람에게</code></div>
+    <p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-2)">해당 장 — 1권 1 · 3 · 4 · 10 · 11장 / 2권 2 · 3 · 6 · 8장</p>
+  </div>
+  <div class="rule-card">
+    <h4>② 강의를 전제한 문장 (8곳)</h4>
+    <div class="xform"><code>오늘 수업 전체가</code><span class="to">→</span><code>이 장 전체가</code><span style="color:var(--ink-3)">· 1권 3장</span></div>
+    <div class="xform"><code>처음 실제로 적용하는 회차</code><span class="to">→</span><code>…적용하는 장</code><span style="color:var(--ink-3)">· 1권 5장</span></div>
+    <div class="xform"><code>같은 강의실에 앉아 있는 원장님들</code><span class="to">→</span><code>비슷한 조건이라고 여겼던 매장들</code><span style="color:var(--ink-3)">· 1권 8장</span></div>
+    <div class="xform"><code>강의안에 기록된 점수</code><span class="to">→</span><code>원안에 기록된 점수</code><span style="color:var(--ink-3)">· 1권 12장</span></div>
+    <div class="xform"><code>옮기는 회차</code><span class="to">→</span><code>옮기는 자리</code><span style="color:var(--ink-3)">· 2권 2장</span></div>
+    <div class="xform"><code>적용하는 회차입니다</code><span class="to">→</span><code>적용합니다</code><span style="color:var(--ink-3)">· 2권 4장</span></div>
+    <div class="xform"><code>이 수업의 결론</code><span class="to">→</span><code>이 장의 결론</code><span style="color:var(--ink-3)">· 2권 8장</span></div>
+    <div class="xform"><code>8장은 종강 회차입니다</code><span class="to">→</span><code>8장은 시리즈의 마지막 장입니다</code><span style="color:var(--ink-3)">· 3권 6장</span></div>
+  </div>
+  <div class="rule-card">
+    <h4>③ 등장 횟수를 세던 문장 (3곳)</h4>
+    <div class="xform"><code>이 책에서 세 번째로 나오는 같은 구조의 처방입니다</code><span class="to">→</span><span style="color:var(--stop)">삭제</span><span style="color:var(--ink-3)">· 1권 11장</span></div>
+    <div class="xform"><code>이 책에서 여덟 번째로 나오는 문장입니다…</code><span class="to">→</span><code>세 권에 걸쳐 되풀이해 나온 문장입니다</code><span style="color:var(--ink-3)">· 3권 7장</span></div>
+    <p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-2)">단권 독서 순서를 전제하므로 세 권 체제에서는 셀 수 없습니다.</p>
+  </div>
+
+  <div class="note warn"><b>회차는 전부 지우지 마십시오.</b>
+  "90일 이내 <b>2회차</b> 방문"(고객)과 "각 <b>회차</b> 사이 관찰 기간"(코스 시술)은 정당한 용법이라 그대로 두었습니다.</div>
+</section>
+
+<section>
+  <h2><span class="n">4</span>기존 원고에 그대로 적용할 규칙</h2>
+  <p class="sub">따로 작업하신 사본이 있으시면 이 순서로 처리하시면 같은 결과가 나옵니다.</p>
+
+  <div class="rule-card">
+    <h4>규칙 1 · 장 번호</h4>
+    <div class="xform"><code>1~12장</code><span class="to">→</span>번호 그대로, 1권 소속</div>
+    <div class="xform"><code>13~22장</code><span class="to">→</span>번호 −12, 2권 소속 <span style="color:var(--ink-3)">(20장 → 2권 8장)</span></div>
+    <div class="xform"><code>23~30장</code><span class="to">→</span>번호 −22, 3권 소속 <span style="color:var(--ink-3)">(29장 → 3권 7장)</span></div>
+    <p style="margin:10px 0 0;font-size:13.5px;color:var(--ink-2)">표기는 <b>같은 권이면</b> <code>4장</code>, <b>다른 권이면</b> <code>2권 1장</code>,
+    <b>권을 걸친 나열이면</b> <code>1권 3장 · 2권 8장</code>입니다. 범위는 <code>9~12장</code>, 나열은 <code>5 · 6 · 7장</code>으로 유지합니다.</p>
+  </div>
+
+  <div class="rule-card">
+    <h4>규칙 2 · 부 표기</h4>
+    <div class="xform"><code>제1부</code> <code>1부</code><span class="to">→</span><code>섹션 A</code> <span style="color:var(--ink-3)">(1권 안에서)</span> · <code>1권 섹션 A</code> <span style="color:var(--ink-3)">(다른 권에서)</span></div>
+    <p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-2)">8개 부가 8개 섹션에 1:1로 대응합니다. 1절 하단 표를 보십시오.</p>
+  </div>
+
+  <div class="rule-card">
+    <h4>규칙 3 · 절 머리말</h4>
+    <p style="margin:0 0 8px;font-size:13.5px;color:var(--ink-2)">모든 절의 제목 아래 두 줄을 이 형식으로 통일했습니다.</p>
+    <div style="font-family:ui-monospace,monospace;font-size:12.5px;background:var(--surface-2);
+      padding:12px 14px;line-height:1.9;color:var(--ink-2);overflow-x:auto">
+      &gt; **관리자론 2 — 권한과 운영 · 섹션 B. 관리자가 실제로 돌리는 시스템**<br>
+      &gt; **적용 범위** 중대형 살롱(40평 이상 · 8인 이상) · 다점포(2개 지점 이상)
+    </div>
+  </div>
+
+  <div class="note warn"><b>기계적 치환에는 함정이 하나 있습니다.</b>
+  <code>1장 상수 4 · 4장 상수 4</code> 같은 문장에서 <b>상수 번호 4가 장 번호로 오인</b>됩니다.
+  <code>상수 · 축 · 단계 · 규칙 · 원칙 · 문항 · 칸 · 조건 · 역량 · 요소 · 신호 · 경로 · 관문 · 층 · 순위 · 번</code> 뒤에 오는 숫자는
+  장이 아닙니다. 실제로 3건이 여기 걸렸습니다.</div>
+</section>
+
+<section>
+  <h2><span class="n">5</span>새로 쓴 17편</h2>
+  <p class="sub">기존 원고에 대응하는 원문이 없습니다. 전부 새로 읽으셔야 합니다.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th class="num">권</th><th>절</th><th>성격</th><th class="num">분량</th></tr></thead>
+      <tbody>
+        <tr><td class="new">1권</td><td><b>총서문</b> · 미용실에는 왜 운영 매뉴얼이 없을까</td><td>기존 여는 글을 시리즈 총서문으로 재편 <span class="chip new">개작</span></td><td class="pct">3,965자</td></tr>
+        <tr><td class="new">1권</td><td><b>프롤로그</b> · 관리자를 세우기 전에</td><td>신규</td><td class="pct">1,471자</td></tr>
+        <tr><td class="new">1권</td><td><b>용어</b> · 이 책의 말을 미용 말로</td><td>기존 용어 안내를 세 권 공통으로 <span class="chip new">개작</span></td><td class="pct">9,215자</td></tr>
+        <tr><td class="new">1권</td><td><b>권말 실습</b> · 우리 매장 관리자 모델 결정서</td><td>신규 · 최소 권한 확인표 포함</td><td class="pct">2,961자</td></tr>
+        <tr><td class="new">1권</td><td><b>에필로그</b> · 이제 선택의 이유를 말할 수 있습니다</td><td>신규</td><td class="pct">1,730자</td></tr>
+        <tr><td class="new">1권</td><td><b>2권 예고</b> · 어디까지 맡기셨습니까</td><td>신규 · 브리지</td><td class="pct">1,090자</td></tr>
+        <tr><td class="new">1권</td><td><b>부록</b> · 양식 모음 (4종)</td><td>신규 · 빈 양식</td><td class="pct">5,540자</td></tr>
+        <tr><td class="new">2권</td><td><b>입구</b> · 이 권부터 읽는 분께</td><td>신규 · 핵심 개념 4 + 간이 인테이크</td><td class="pct">2,501자</td></tr>
+        <tr><td class="new">2권</td><td><b>프롤로그</b> · 맡긴다는 말에는 내용이 필요합니다</td><td>신규</td><td class="pct">1,336자</td></tr>
+        <tr><td class="new">2권</td><td><b>권말 실습</b> · 운영 문서 연결 점검</td><td>신규 · 다섯 개 연결 고리 점검</td><td class="pct">2,470자</td></tr>
+        <tr><td class="new">2권</td><td><b>에필로그</b> · 같은 문제를 다시 만났을 때</td><td>신규</td><td class="pct">1,600자</td></tr>
+        <tr><td class="new">2권</td><td><b>3권 예고</b> · 누가 이어받을 수 있습니까</td><td>신규 · 브리지</td><td class="pct">1,280자</td></tr>
+        <tr><td class="new">2권</td><td><b>부록</b> · 양식 모음 (6종)</td><td>신규 · 빈 양식</td><td class="pct">8,775자</td></tr>
+        <tr><td class="new">3권</td><td><b>리캡</b> · 우리가 여기까지 온 과정</td><td>신규 · 1·2권 요약</td><td class="pct">1,165자</td></tr>
+        <tr><td class="new">3권</td><td><b>입구</b> · 이 권부터 읽는 분께</td><td>신규 · 최소 도구 6</td><td class="pct">2,806자</td></tr>
+        <tr><td class="new">3권</td><td><b>프롤로그</b> · 같은 간판 아래, 다른 좌표</td><td>신규</td><td class="pct">1,398자</td></tr>
+        <tr><td class="new">3권</td><td><b>권말 실습</b> · 다음 실행을 정한다</td><td>신규 · 90일 + 양성 + 확장 판단</td><td class="pct">3,068자</td></tr>
+        <tr><td class="new">3권</td><td><b>에필로그</b> · 다음 사람이 이어 쓸 수 있도록</td><td>기존 닫는 글 흡수 <span class="chip new">통합</span></td><td class="pct">5,890자</td></tr>
+        <tr><td class="new">3권</td><td><b>마무리</b> · 다음 장은 우리 매장에서</td><td>신규 · 마지막 페이지</td><td class="pct">1,020자</td></tr>
+        <tr><td class="new">3권</td><td><b>부록</b> · 양식 모음 (4종)</td><td>신규 · 빈 양식 + 세 권 전체 목록</td><td class="pct">7,060자</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">6</span>부록 — 문자에서 권별 번호로</h2>
+  <p class="sub">원문 A~K는 목록만 있고 실물 양식이 없었습니다. 각 장의 6칸 도구 사양을 그대로 빈 양식으로 옮겼습니다.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th class="num">원문</th><th></th><th class="num">새 번호</th><th>양식</th><th>완성 지점</th></tr></thead>
+      <tbody>
+        <tr><td class="old">C</td><td class="arrow">→</td><td class="new"><span class="vol">1권</span>부록 1</td><td>원장 · 관리자 역할 헌장</td><td>1권 2장</td></tr>
+        <tr><td class="old">—</td><td class="arrow">＋</td><td class="new"><span class="vol">1권</span>부록 2</td><td>관리자 성과 스코어카드 <span class="chip new">신설</span></td><td>1권 3장</td></tr>
+        <tr><td class="old">A</td><td class="arrow">→</td><td class="new"><span class="vol">1권</span>부록 3</td><td>진단 인테이크 시트</td><td>1권 8장</td></tr>
+        <tr><td class="old">B</td><td class="arrow">→</td><td class="new"><span class="vol">1권</span>부록 4</td><td>관리자 유형 선택 점수표</td><td>1권 12장</td></tr>
+        <tr><td class="old">D</td><td class="arrow">→</td><td class="new"><span class="vol">2권</span>부록 1</td><td>권한 위임표 · 보고/허락 구분표</td><td>2권 1장</td></tr>
+        <tr><td class="old">G</td><td class="arrow">→</td><td class="new"><span class="vol">2권</span>부록 2</td><td>기술 · 운영 리더 영역표 <span class="chip read">실체 확정</span></td><td>2권 3장</td></tr>
+        <tr><td class="old">E</td><td class="arrow">→</td><td class="new"><span class="vol">2권</span>부록 3</td><td>에스컬레이션 기준표</td><td>2권 4장</td></tr>
+        <tr><td class="old">H</td><td class="arrow">→</td><td class="new"><span class="vol">2권</span>부록 4</td><td>1:1 면담 질문지</td><td>2권 2 · 4 · 7장</td></tr>
+        <tr><td class="old">F</td><td class="arrow">→</td><td class="new"><span class="vol">2권</span>부록 5</td><td>KPI 정의서</td><td>2권 8장</td></tr>
+        <tr><td class="old">I</td><td class="arrow">→</td><td class="new"><span class="vol">2권</span>부록 6</td><td>주간 · 월간 운영 보고서</td><td>2권 9장</td></tr>
+        <tr><td class="old">K</td><td class="arrow">→</td><td class="new"><span class="vol">3권</span>부록 1</td><td>사례 라이브러리 · 블록 이식 시트</td><td>3권 3장</td></tr>
+        <tr><td class="old">—</td><td class="arrow">＋</td><td class="new"><span class="vol">3권</span>부록 2</td><td>관리자 후보 진단표 <span class="chip new">신설</span></td><td>3권 4장</td></tr>
+        <tr><td class="old">—</td><td class="arrow">＋</td><td class="new"><span class="vol">3권</span>부록 3</td><td>6개월 양성 과정 설계표 <span class="chip new">신설</span></td><td>3권 5장</td></tr>
+        <tr><td class="old">J</td><td class="arrow">→</td><td class="new"><span class="vol">3권</span>부록 4</td><td>평가 · 보상 · 커리어 설계표 <span class="chip read">실체 확정</span></td><td>3권 6장</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note"><b>G와 J는 원문에서 한 번도 참조되지 않았습니다.</b> 목록에만 있던 항목이라,
+  G는 2권 3장의 리더 영역표로, J는 3권 6장의 평가 · 보상 설계표로 실체를 확정했습니다.
+  <br><br><b>1권이 2권 소속 부록을 참조하던 문제</b>도 있었습니다. 1권 3 · 9 · 10장이 부록 F를, 2 · 11장이 부록 D를 가리켰는데
+  모두 "…와 연결됩니다" 형태의 전방 참조라 양식 중복 없이 <code>2권 부록 5</code> 표기로 해소했습니다.
+  다만 1권 3장이 자체 스코어카드를 만들므로 <b>1권 부록 2를 신설</b>해 1권만 읽는 독자도 양식을 갖게 했습니다.</div>
+</section>
+
+<section>
+  <h2><span class="n">7</span>없어진 것 · 합쳐진 것</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>원문</th><th>처리</th><th>이유</th></tr></thead>
+      <tbody>
+        <tr><td><b>여는 글</b> 「미용실에는 왜 운영 매뉴얼이 없을까」</td><td><span class="chip new">1권 총서문으로 재편</span></td><td>세 권 공통 서문이 되어야 하므로. 산업 특성 세 가지(승진이 곧 감봉 / 고객이 사람에게 붙음 / 기술과 운영의 혼재)는 그대로 보존</td></tr>
+        <tr><td><b>닫는 글</b> 「데뷔 첫 손님」</td><td><span class="chip new">3권 에필로그에 흡수</span></td><td>3권 8장 안의 '과정 완결 · 에필로그' + 닫는 글 + 권 에필로그가 연달아 오면 결말이 세 번 반복됨</td></tr>
+        <tr><td><b>1권 12장 끝</b> 「다음 부 예고」</td><td><span class="chip gone">삭제</span></td><td>전용 브리지 페이지(2권 예고)가 대신함</td></tr>
+        <tr><td><b>2권 10장 끝</b> 「다음 부 예고」</td><td><span class="chip gone">삭제</span></td><td>전용 브리지 페이지(3권 예고)가 대신함</td></tr>
+        <tr><td><b>원문 8개 '부'</b></td><td><span class="chip new">권 안의 '섹션'</span></td><td>'3부작의 3부'와 혼동</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note"><b>보존한 것</b> — 상수 120개 전문, 모든 사례의 수치와 결말, 판정 기준표,
+  '혼자 읽는 독자를 위한 버전', 3권 8장 안의 「과정 완결 · 에필로그」(강의 종강사 원문).</div>
+</section>
+
+<section>
+  <h2><span class="n">8</span>저자 확인이 필요한 10건</h2>
+  <p class="sub">임의로 답을 정하지 않고 남겨 둔 항목입니다. 편집 확정 전에 저자 판단이 필요합니다.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>항목</th><th>상황</th></tr></thead>
+      <tbody>
+        <tr><td><b>1권 12장 점수 검산</b></td><td>70평 사례의 시스템 점수가 원안은 8, 배점상으로는 6. 6을 적용해도 Q2 판정은 유지됨을 본문에 명시해 둠</td></tr>
+        <tr><td><b>세 종류의 90일</b></td><td>1권 10장 제도 유예 / 1권 12장 모델 시험운영 / 3권 8장 시스템 구축. 특히 10장 제도 유예와 3권 8장 31~60일 가동의 관계 정리 필요</td></tr>
+        <tr><td><b>2층 설명과 3층 설명</b></td><td>초기에는 '상수 × 변수', 1권 4장부터 준상수를 분리. 권두에서 안내할지</td></tr>
+        <tr><td><b>사분면과 조직 배치</b></td><td>기술 리더가 있다고 두 복잡도가 모두 높아지는지 확인 필요</td></tr>
+        <tr><td><b>공동 결정의 예외</b></td><td>1권 2장은 단일 결정권자, 1권 11장은 일부 공동 영역. 예외 조건을 한 상자에서 설명</td></tr>
+        <tr><td><b>헌장 선정과 개념 분류</b></td><td>막간의 '헌장에 안 싣는 것'과 '개념상 준상수'를 구분할지</td></tr>
+        <tr><td><b>예외 공개와 사생활 보호</b></td><td>2권 2장 예외 공개 vs 1권 7장 · 2권 4장 사생활 보호의 연결 설명</td></tr>
+        <tr><td><b>금전 사안과 전결</b></td><td>비용 한도 내 전결과 금전 사고 즉시 이관의 구분</td></tr>
+        <tr><td><b>비슷한 숫자의 다른 의미</b></td><td>선수형 평가 비중 · 관리 시간 비율 · 개인 매출 집중도에 유사한 30%가 등장. 분자 · 분모 · 용도 명시 필요</td></tr>
+        <tr><td><b>경험칙과 사례 수치</b></td><td>저자의 운영 판단 기준과 사례 수치로 표기 — 일반 통계로 확장하지 않음</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <p><b>현재 규모</b> · 전 3권 51개 절 · 상수 120개 · 부록 14종 · 본문 약 47만 자 · 조판 465쪽(1권 185 / 2권 141 / 3권 139)</p>
+  <p><b>대조 기준</b> · 재구성 직전 원고(커밋 <code>0c1e389</code>)와 현재 원고를 줄 단위로 비교. 파일 51개, 추가 3,005행 · 삭제 1,085행.</p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var q = document.getElementById('q'),
+      tb = document.querySelector('#map tbody'),
+      cnt = document.getElementById('cnt'),
+      rows = Array.prototype.slice.call(tb.querySelectorAll('tr'));
+  function run(){
+    var v = q.value.trim().toLowerCase();
+    var shown = 0, lastSec = null, secHas = {};
+    rows.forEach(function(r){
+      if (r.classList.contains('sec')) { lastSec = r; secHas[rows.indexOf(r)] = false; return; }
+      var hit = !v || r.textContent.toLowerCase().indexOf(v) !== -1;
+      r.hidden = !hit;
+      if (hit) { shown++; if (lastSec) lastSec.dataset.has = '1'; }
+    });
+    rows.forEach(function(r){
+      if (!r.classList.contains('sec')) return;
+      var n = r.nextElementSibling, any = false;
+      while (n && !n.classList.contains('sec')) { if (!n.hidden) { any = true; break; } n = n.nextElementSibling; }
+      r.hidden = !any;
+    });
+    cnt.textContent = v ? (shown + '개 일치') : '31개 전부 표시';
+  }
+  q.addEventListener('input', run);
+})();
+</script>
