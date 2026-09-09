@@ -14,6 +14,11 @@ with zipfile.ZipFile(Z, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
             if os.path.exists(p):
                 z.write(p, '%s/관리자론-%d.%s' % (VN[v], v, ext))
     z.write('build/reader.html', '워크북-리더(세 권 통합).html')
+    import os.path
+    for ext in ('pdf', 'docx', 'md', 'html'):
+        p2 = 'build/편집자/관리자론-재구성-대조표.%s' % ext
+        if os.path.exists(p2):
+            z.write(p2, '편집자 인수인계/관리자론-재구성-대조표.%s' % ext)
     for f in sorted(glob.glob('원고/[123]권/*.md')):
         z.write(f, '원고(절별)/' + f.split('/', 1)[1])
     for f in ['docs/책-구성안.md', 'docs/집필-가이드.md']:
