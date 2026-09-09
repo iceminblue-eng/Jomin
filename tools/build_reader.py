@@ -204,38 +204,47 @@ def render(md, slug):
     return title, meta, ''.join(out)
 
 # ---------- 수집 ----------
-files = sorted(glob.glob(os.path.join(ROOT, '원고', '*', '*.md')),
-               key=lambda p: os.path.basename(p))
+VOLTITLE = {1: '기준과 진단', 2: '권한과 운영', 3: '확장과 양성'}
+
+files = []
+for v in (1, 2, 3):
+    files += sorted(glob.glob(os.path.join(ROOT, '원고', '%d권' % v, '*.md')),
+                    key=lambda p: os.path.basename(p))
+
 chapters = []
 for f in files:
+    vol = int(re.search(r'원고/(\d)권/', f.replace(os.sep, '/')).group(1))
+    seq = re.match(r'(\d+)', os.path.basename(f)).group(1)
+    slug = 'v%d-%s' % (vol, seq)
     md = open(f, encoding='utf-8').read()
-    sm = re.match(r'(\d+)장?([A-Za-z])?', os.path.basename(f))
-    slug = 'ch' + sm.group(1) + (sm.group(2) or '').lower()
     title, meta, body = render(md, slug)
     num = re.match(r'(\d+)장', title).group(1) if re.match(r'\d+장', title) else ''
     name = title.split('·', 1)[1].strip() if '·' in title else title
-    # 번호 없는 막간은 제목 앞머리('막간')를 배지로 쓴다
     badge = num if num else title.split('·', 1)[0].strip()
     part = ''
     if meta:
-        m = re.search(r'\*\*(제\d부[^*]*)\*\*', meta[0])
-        if m: part = m.group(1).split('—')[0].strip()
+        m = re.search(r'섹션\s*([A-C])\.\s*([^*]+)', meta[0])
+        if m: part = '%d권 · 섹션 %s. %s' % (vol, m.group(1), m.group(2).strip())
     scope = ''
     if meta:
         m = re.search(r'\*\*적용 범위\*\*\s*(.*)', meta[0])
         if m: scope = re.sub(r'\*\*|·\s*$', '', m.group(1)).strip()
-    chapters.append(dict(slug=slug, num=num, name=name, part=part,
+    chapters.append(dict(slug=slug, vol=vol, num=num, name=name, part=part,
                          scope=scope, badge=badge, body=body))
 
-print(str(len(chapters)) + ' sections: '
-      + ', '.join((c['num'] + '장' if c['num'] else c['badge']) for c in chapters))
+print('%d sections | ' % len(chapters)
+      + ' / '.join('%d권 %d' % (v, sum(1 for c in chapters if c['vol'] == v)) for v in (1, 2, 3)))
 
 # ---------- 템플릿 ----------
 CSS = open(os.path.join(ROOT, 'tools', 'reader.css'), encoding='utf-8').read()
 
-nav = ''.join(
-    '<button class="tab" data-go="%s"><b>%s</b><span>%s</span></button>'
-    % (c['slug'], c['badge'], c['name']) for c in chapters)
+nav, lastvol = '', None
+for c in chapters:
+    if c['vol'] != lastvol:
+        lastvol = c['vol']
+        nav += '<span class="voldiv"><b>%d권</b>%s</span>' % (c['vol'], VOLTITLE[c['vol']])
+    nav += ('<button class="tab" data-go="%s"><b>%s</b><span>%s</span></button>'
+            % (c['slug'], c['badge'], c['name']))
 
 parts, seen = [], None
 for c in chapters:
@@ -263,12 +272,12 @@ doc = (
 '<style>' + CSS + '</style>\n'
 '<div id="bar"></div>\n'
 '<nav id="nav"><div class="wrap navin">'
-'<div class="brand"><b>관리자론</b><span>헤어살롱 편</span></div>'
+'<div class="brand"><b>관리자론</b><span>헤어살롱 편 · 전 3권</span></div>'
 '<div class="tabs">' + nav + '</div></div></nav>\n'
 + ''.join(parts) +
 '\n<footer><div class="wrap">'
 '<p><b>관리자론 — 헤어살롱 편</b><br>미용 시장 관리자 운용 바이블</p>'
-'<p>원본 「운영 관리자 · 매트릭스 대입 수업」 강의안<br>단행본 원고 · 전 30장 초고 완료</p>'
+'<p>1권 기준과 진단 · 2권 권한과 운영 · 3권 확장과 양성<br>단행본 원고 · 3부작 재구성</p>'
 '</div></footer>\n'
 '<script>' + SCRIPT + '</script>\n')
 

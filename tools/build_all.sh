@@ -1,28 +1,26 @@
 #!/usr/bin/env bash
-# 원고 → 전체 산출물 빌드
+# 원고 → 전체 산출물 빌드 (3권 체제)
 set -e
 cd "$(dirname "$0")/.."
 SP="${SCRATCH:-/tmp/gwanrijaron}"
 mkdir -p "$SP" build
 
-echo "[1/6] 읽기용 HTML (워크북 리더)"
+echo "[1/4] 워크북 리더 (세 권 통합)"
 python3 tools/build_reader.py build/reader.html
 
-echo "[2/6] 단행본 원고 (단일 마크다운)"
-python3 tools/build_manuscript.py "build/관리자론-헤어살롱편-원고.md"
+echo "[2/4] 권별 단행본 원고"
+for v in 1 2 3; do python3 tools/build_manuscript.py $v "build/${v}권/관리자론-${v}.md"; done
 
-echo "[3/6] 인쇄용 HTML"
-python3 tools/build_print.py
+echo "[3/4] 권별 Word 원고"
+for v in 1 2 3; do
+  python3 tools/md_to_json.py "build/${v}권/관리자론-${v}.md" "$SP/book${v}.json" > /dev/null
+  node tools/make_docx.js "$SP/book${v}.json" "build/${v}권/관리자론-${v}.docx"
+  python3 tools/fix_opc.py "build/${v}권/관리자론-${v}.docx"   # OPC 파트 순서 교정
+done
 
-echo "[4/6] Word 원고 (.docx)"
-python3 tools/md_to_json.py "build/관리자론-헤어살롱편-원고.md" "$SP/book.json"
-node "$SP/make_docx.js" "$SP/book.json" "build/관리자론-헤어살롱편.docx"
-python3 tools/fix_opc.py "build/관리자론-헤어살롱편.docx"   # OPC 파트 순서 교정
+echo "[4/4] 권별 PDF"
+for v in 1 2 3; do python3 tools/build_print.py "build/${v}권/관리자론-${v}.md" "build/${v}권/인쇄.html"; done
+node tools/pdf.js
 
-echo "[5/6] PDF"
-node "$SP/pdf.js"
-
-echo "[6/6] 배포용 묶음"
 python3 tools/make_bundle.py
-
-ls -la build/
+ls -la build/*/

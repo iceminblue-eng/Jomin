@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-"""단행본 원고 → 인쇄용 단일 HTML (Chromium PDF 출력용)."""
+"""권별 단행본 원고 → 인쇄용 HTML (Chromium PDF 출력용)."""
 import sys, os, html as H
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from md_to_json import parse
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, 'build', '관리자론-헤어살롱편-원고.md')
-OUT = sys.argv[2] if len(sys.argv) > 2 else os.path.join(ROOT, 'build', '관리자론-헤어살롱편-인쇄.html')
+SRC = sys.argv[1]
+OUT = sys.argv[2]
 
 def runs(rs):
     o = []
@@ -19,45 +18,37 @@ def runs(rs):
     return ''.join(o)
 
 def render(blocks):
-    out, first_h1 = [], True
+    out, first = [], True
     for idx, b in enumerate(blocks):
         k = b['k']
         if k == 'h':
             lv = b['lvl']
             if lv == 1:
-                out.append('<h1%s>%s</h1>' % ('' if first_h1 else ' class="brk"', runs(b['runs'])))
-                first_h1 = False
+                out.append('<h1%s>%s</h1>' % ('' if first else ' class="brk"', runs(b['runs'])))
+                first = False
             else:
                 out.append('<h%d>%s</h%d>' % (lv, runs(b['runs']), lv))
-        elif k == 'p':
-            out.append('<p>%s</p>' % runs(b['runs']))
+        elif k == 'p':   out.append('<p>%s</p>' % runs(b['runs']))
         elif k == 'quote':
-            cls = 'q big' if b['big'] else 'q'
             out.append('<blockquote class="%s">%s</blockquote>'
-                       % (cls, ''.join('<p>%s</p>' % runs(p) for p in b['paras'])))
-        elif k == 'ul':
-            out.append('<ul>%s</ul>' % ''.join('<li>%s</li>' % runs(x) for x in b['items']))
-        elif k == 'ol':
-            out.append('<ol>%s</ol>' % ''.join('<li>%s</li>' % runs(x) for x in b['items']))
-        elif k == 'pre':
-            out.append('<pre>%s</pre>' % H.escape('\n'.join(b['lines'])))
+                       % ('q big' if b['big'] else 'q',
+                          ''.join('<p>%s</p>' % runs(p) for p in b['paras'])))
+        elif k == 'ul':  out.append('<ul>%s</ul>' % ''.join('<li>%s</li>' % runs(x) for x in b['items']))
+        elif k == 'ol':  out.append('<ol>%s</ol>' % ''.join('<li>%s</li>' % runs(x) for x in b['items']))
+        elif k == 'pre': out.append('<pre>%s</pre>' % H.escape('\n'.join(b['lines'])))
         elif k == 'table':
-            n = b['cols']
-            t = ['<table>']
+            n = b['cols']; t = ['<table>']
             if b['head']:
                 h = b['head'] + [[{'t': ''}]] * (n - len(b['head']))
-                t.append('<thead><tr>%s</tr></thead>'
-                         % ''.join('<th>%s</th>' % runs(c) for c in h[:n]))
+                t.append('<thead><tr>%s</tr></thead>' % ''.join('<th>%s</th>' % runs(c) for c in h[:n]))
             t.append('<tbody>')
             for r0 in b['rows']:
                 r = r0 + [[{'t': ''}]] * (n - len(r0))
                 t.append('<tr>%s</tr>' % ''.join('<td>%s</td>' % runs(c) for c in r[:n]))
-            t.append('</tbody></table>')
-            out.append(''.join(t))
+            t.append('</tbody></table>'); out.append(''.join(t))
         elif k == 'hr':
-            prev, nxt = blocks[idx-1] if idx else None, blocks[idx+1] if idx+1 < len(blocks) else None
-            if prev and nxt and prev['k'] != 'h' and nxt['k'] != 'h':
-                out.append('<hr>')
+            pv, nx = blocks[idx-1] if idx else None, blocks[idx+1] if idx+1 < len(blocks) else None
+            if pv and nx and pv['k'] != 'h' and nx['k'] != 'h': out.append('<hr>')
     return ''.join(out)
 
 CSS = """
@@ -96,4 +87,4 @@ doc = ('<!doctype html><html lang="ko"><head><meta charset="utf-8">'
        % (CSS, render(blocks)))
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 open(OUT, 'w', encoding='utf-8').write(doc)
-print('wrote %s  %d blocks  %.2fMB' % (OUT, len(blocks), len(doc)/1048576))
+print('  인쇄용 HTML: %d blocks' % len(blocks))
