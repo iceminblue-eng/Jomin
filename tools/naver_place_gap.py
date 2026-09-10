@@ -8,6 +8,11 @@
 사용법:
     python3 tools/naver_place_gap.py 네이버플레이스/02-비교브랜드/브랜드명.md
     python3 tools/naver_place_gap.py 카드.md -o 네이버플레이스/03-분석보고서/브랜드명-YYYYMMDD.md
+    python3 tools/naver_place_gap.py 카드.md --type 로컬      # 카드의 '비즈니스 타입' 행을 덮어씀
+
+비즈니스 타입(기준 문서 §0)은 카드의 '| 비즈니스 타입 | ... |' 행에서 읽는다.
+'프랜차이즈'가 들어 있으면 프랜차이즈 고객수 타입(기준 A 이가자 · 상위 B 로한),
+'로컬'이 들어 있으면 지역 로컬 고객수 타입(기준 L 온앤어스 · 상위 A 이가자)으로 판정한다.
 
 정성 판단(한 줄 결론·처방 문안·로드맵 세부)은 출력된 뼈대 위에 사람이/Claude가 채운다.
 기준값을 바꾸려면 아래 BENCH·ITEMS 를 고치지 말고 00-정의 문서를 먼저 개정한 뒤 여기에 반영한다.
@@ -21,15 +26,34 @@ from pathlib import Path
 # 기준값 (00-정의-및-최적화-기준.md §2·§4 와 동기화)
 # ---------------------------------------------------------------------------
 
-# 정량 지표: 지표명 → (기준값 A, 상위값 B, 성격, 미달 시 등급)
-BENCH = {
-    "평점":        (4.92, 4.96, "품질",     None),
-    "방문자 리뷰":  (14132, 30170, "축적형", "P2"),
-    "블로그 리뷰":  (1172, 1689, "축적형",  "P2"),
-    "스타일정보":   (300, 300, "단기충전",   "P1"),
-    "가격표 이미지": (10, 1, "단기충전",     "P1"),
+# 정량 지표 (타입별): 지표명 → (기준값, 상위값, 성격, 미달 시 등급)
+BENCH_BY_TYPE = {
+    # 프랜차이즈 고객수: 기준 A 이가자헤어비스 신도림점 · 상위 B 로한(디얼스 목동41타워점)
+    "프랜차이즈": {
+        "평점":        (4.92, 4.96, "품질",     None),
+        "방문자 리뷰":  (14132, 30170, "축적형", "P2"),
+        "블로그 리뷰":  (1172, 1689, "축적형",  "P2"),
+        "스타일정보":   (300, 300, "단기충전",   "P1"),
+        "가격표 이미지": (10, 1, "단기충전",     "P1"),
+    },
+    # 지역 로컬 고객수: 기준 L 온앤어스헤어 불당점(축적형은 실측, 단기충전은 90일 목표) · 상위 A 이가자
+    "로컬": {
+        "평점":        (4.94, 4.92, "품질",     None),
+        "방문자 리뷰":  (5451, 14132, "축적형",  "P2"),
+        "블로그 리뷰":  (397, 1172, "축적형",    "P2"),
+        "스타일정보":   (300, 300, "단기충전",   "P1"),
+        "가격표 이미지": (10, 10, "단기충전",    "P1"),
+    },
 }
-BENCH_TOP = {k: max(v[0], v[1]) for k, v in BENCH.items()}  # 개선점 판정용 상위값
+TYPE_LABEL = {
+    "프랜차이즈": ("프랜차이즈 고객수", "A 이가자헤어비스 신도림점", "B 로한 (디얼스 목동41타워점)"),
+    "로컬":      ("지역 로컬 고객수",  "L 온앤어스헤어 불당점",   "A 이가자헤어비스 신도림점"),
+}
+RESERVE_STRUCT = {
+    "프랜차이즈": "디자이너 5 + 안내형 1 + 이벤트형 1",
+    "로컬":      "디자이너 5~6 + 추천형 1 + 이벤트형 1 (90일 목표 7)",
+}
+RESERVE_TOP = {"프랜차이즈": "11개", "로컬": "5 + 2"}
 
 # 쿠폰 퍼널 4축: 지표명 → 미충족 시 등급
 FUNNEL = {
@@ -130,6 +154,8 @@ def parse_card(path: Path):
     name = title.group(1).strip() if title else path.stem
     snap = re.search(r"^\|\s*스냅샷 일자\s*\|\s*([^|]*)\|", md, re.M)
     snap = snap.group(1).strip() if snap else ""
+    t = re.search(r"^\|\s*비즈니스 타입\s*\|\s*([^|]*)\|", md, re.M)
+    btype = detect_type(t.group(1)) if t else None
     metrics = {}
     for r in _rows(md, "[정량 지표]"):
         if len(r) >= 2 and r[0]:
@@ -139,14 +165,27 @@ def parse_card(path: Path):
     for r in _rows(md, "[32항목 체크]"):
         if len(r) >= 3 and r[0].isdigit():
             checks[int(r[0])] = {"status": _yn(r[2]), "basis": r[3] if len(r) > 3 else ""}
-    return name, snap, metrics, checks
+    return name, snap, btype, metrics, checks
+
+
+def detect_type(text: str):
+    """'프랜차이즈 고객수' / '지역 로컬 고객수' 문자열 → 키. 양식 안내문(둘 다 포함)은 None."""
+    t = (text or "").strip()
+    has_f, has_l = "프랜차이즈" in t, ("로컬" in t or "지역" in t)
+    if has_f and not has_l:
+        return "프랜차이즈"
+    if has_l and not has_f:
+        return "로컬"
+    return None
 
 
 # ---------------------------------------------------------------------------
 # 판정
 # ---------------------------------------------------------------------------
 
-def quant_gap(metrics):
+def quant_gap(metrics, btype):
+    BENCH = BENCH_BY_TYPE[btype]
+    BENCH_TOP = {k: max(v[0], v[1]) for k, v in BENCH.items()}
     out = []
     for key, (a, b, kind, grade) in BENCH.items():
         raw = metrics.get(key, {}).get("raw", "")
@@ -239,8 +278,10 @@ def area_verdicts(checks):
     return res
 
 
-def action_lists(checks, quant):
+def action_lists(checks, quant, btype):
     """보완점(P0/P1/P2 그룹) · 개선점 · 유지 목록."""
+    BENCH = BENCH_BY_TYPE[btype]
+    BENCH_TOP = {k: max(v[0], v[1]) for k, v in BENCH.items()}
     fix = {"P0": [], "P1": [], "P2": []}
     keep = []
     for n, (area, item, grade) in ITEMS.items():
@@ -262,12 +303,13 @@ def action_lists(checks, quant):
 # 출력
 # ---------------------------------------------------------------------------
 
-def render(name, snap, metrics, checks):
-    quant = quant_gap(metrics)
+def render(name, snap, btype, metrics, checks):
+    tlabel, tbase, ttop = TYPE_LABEL[btype]
+    quant = quant_gap(metrics, btype)
     funnel = funnel_gap(metrics)
     price = price_diag(metrics)
     areas = area_verdicts(checks)
-    fix, improve, keep = action_lists(checks, quant)
+    fix, improve, keep = action_lists(checks, quant, btype)
     n_p0 = len(fix["P0"]); n_p1 = len(fix["P1"]); n_p2 = len(fix["P2"])
     filled = sum(1 for c in checks.values() if c["status"] is not None)
     ok = sum(1 for c in checks.values() if c["status"] == "Y")
@@ -279,7 +321,8 @@ def render(name, snap, metrics, checks):
     w(f"| 항목 | 내용 |")
     w(f"| --- | --- |")
     w(f"| 스냅샷 일자 | {snap or '(카드에 미기재)'} |")
-    w(f"| 기준 문서 | `00-정의-및-최적화-기준.md` v1.0 (기준 매장 A 이가자헤어비스 신도림점 · B 디얼스 목동41타워점) |")
+    w(f"| 비즈니스 타입 | **{tlabel}** — 기준 {tbase} · 상위 {ttop} (기준 문서 §0·§2) |")
+    w(f"| 기준 문서 | `00-정의-및-최적화-기준.md` v1.1 |")
     w(f"| 32항목 충족 | {ok} / 32 (입력 {filled}) — P0 {n_p0} · P1 {n_p1} · P2 {n_p2} 건 보완 필요 |")
     w(f"| 한 줄 결론 | _(9영역 판정을 보고 매장 유형을 한 줄로 쓴다 — 기준 문서 §1-5)_ |")
     w("")
@@ -294,7 +337,7 @@ def render(name, snap, metrics, checks):
     w("")
     w("## 1. 정량 GAP (7지표)")
     w("")
-    w("| 지표 | 기준값 (A) | 상위값 (B) | 진단값 | GAP | 달성률 | 판정 |")
+    w(f"| 지표 | 기준값 ({tbase.split()[0]}) | 상위값 ({ttop.split()[0]}) | 진단값 | GAP | 달성률 | 판정 |")
     w("| --- | --- | --- | --- | --- | --- | --- |")
     for (k, a, b, v, gap, rate, verdict) in quant:
         fa = f"{a:,.2f}" if k == "평점" else f"{a:,.0f}"
@@ -311,7 +354,7 @@ def render(name, snap, metrics, checks):
     d = metrics.get("예약상품 디자이너", {}).get("raw", "")
     g_ = metrics.get("예약상품 안내형", {}).get("raw", "")
     e = metrics.get("예약상품 이벤트형", {}).get("raw", "")
-    w(f"| 예약 구조 | 디자이너 5 + 안내형 1 + 이벤트형 1 | 11개 | 디자이너 {d or '?'} + 안내형 {g_ or '?'} + 이벤트형 {e or '?'} | | | "
+    w(f"| 예약 구조 | {RESERVE_STRUCT[btype]} | {RESERVE_TOP[btype]} | 디자이너 {d or '?'} + 안내형 {g_ or '?'} + 이벤트형 {e or '?'} | | | "
       f"{'구조 충족' if all(_num(x) and _num(x) >= 1 for x in (d, g_, e)) else '부분 충족 — 빠진 유형 보완 (P0 표준화 / P1 추가)'} |")
     w("")
     w("### 쿠폰 퍼널 4축")
@@ -330,7 +373,7 @@ def render(name, snap, metrics, checks):
     disc = metrics.get("첫방문 할인율", {}).get("raw", "")
     if disc:
         w("")
-        w(f"- 첫방문 할인율: {disc} — 기준 30%(A) / 50%(B). {'범위 표기 → 디자이너별 상이 → 매장 통일 필요 (P0)' if '~' in disc else ''}")
+        w(f"- 첫방문 할인율: {disc} — 기준 30%(A 이가자) / 50%(B 로한) / 로컬 1차 목표 30% 매장 통일. {'범위 표기 → 디자이너별 상이 → 매장 통일 필요 (P0)' if '~' in disc else ''}")
     w("")
     w("## 2. 9개 영역 판정")
     w("")
@@ -355,6 +398,8 @@ def render(name, snap, metrics, checks):
             w(f"| {n} | {area} | {item} | {st} | {basis} | _ |")
         w("")
     w("## 4. 개선점 — 기준 충족, 상위 수준과 격차 (더 잘한다)")
+    w("")
+    w(f"_(상위 수준 = {ttop})_")
     w("")
     if improve:
         w("| 지표 | 진단값 | 상위값 | 방향 |")
@@ -425,11 +470,15 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("card", type=Path, help="브랜드 카드 .md")
     ap.add_argument("-o", "--out", type=Path, help="출력 파일 (기본: 표준출력)")
+    ap.add_argument("--type", choices=list(BENCH_BY_TYPE), help="비즈니스 타입 강제 지정 (프랜차이즈 / 로컬)")
     a = ap.parse_args()
-    name, snap, metrics, checks = parse_card(a.card)
+    name, snap, btype, metrics, checks = parse_card(a.card)
+    btype = a.type or btype
+    if btype is None:
+        sys.exit("비즈니스 타입을 정할 수 없습니다. 카드의 '| 비즈니스 타입 |' 행에 '프랜차이즈 고객수' 또는 '지역 로컬 고객수'를 적거나 --type 을 주세요.")
     if not checks:
         sys.exit("[32항목 체크] 표에서 항목을 읽지 못했습니다. 번호 열이 숫자인지 확인하세요.")
-    md = render(name, snap, metrics, checks)
+    md = render(name, snap, btype, metrics, checks)
     if a.out:
         a.out.parent.mkdir(parents=True, exist_ok=True)
         a.out.write_text(md, encoding="utf-8")
