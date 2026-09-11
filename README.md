@@ -55,7 +55,15 @@ build/
   편집자/             재구성 대조표 .md · .docx · .pdf · .html
   reader.html         워크북 리더 — 아티팩트로 발행
   관리자론-3부작.zip   배포용 묶음 (git 미추적)
+플레이스-벤치마크/    네이버 플레이스 벤치마크 비교 (부산 미용인 교육 · 아우스드럭 사례)
+  비교분석-가이드.md   기준 매장 B·C 규정 · 27항목 채점표 · 개선 가이드 규칙 · 아우스드럭 채점
+  비교분석.html        대화형 비교 화면 — 살롱을 추가해 채점하면 달성률·개선 순서가 나옴 (아티팩트로 발행)
+  상권분석-타겟-비즈니스방향-가이드.docx   상권 데이터 해석 → 타겟 설정 → 비즈니스 방향 (캡처 이미지 포함)
+  tools/make_guide_docx.js   위 Word 가이드 빌드 스크립트 (docx-js)
+  images/              교육자료·아우스드럭 플레이스 화면 캡처
 ```
+
+**플레이스 Word 가이드 빌드:** `NODE_PATH=<docx 설치 경로> node 플레이스-벤치마크/tools/make_guide_docx.js 플레이스-벤치마크/상권분석-타겟-비즈니스방향-가이드.docx && python3 tools/fix_opc.py 플레이스-벤치마크/상권분석-타겟-비즈니스방향-가이드.docx`
 
 **전체 빌드:** `bash tools/build_all.sh`
 **리더만:** `python3 tools/build_reader.py build/reader.html`

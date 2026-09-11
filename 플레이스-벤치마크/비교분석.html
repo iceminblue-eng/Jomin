@@ -1,0 +1,634 @@
+<title>플레이스 벤치마크 비교</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#F1F3F0; --surface:#FFFFFF; --surface-2:#E9ECE8;
+  --ink:#17201C; --ink-2:#4C574F; --ink-3:#78837B;
+  --rule:#D2D8D1; --rule-2:#BFC7BE;
+  --pine:#12483A; --pine-soft:#E2EBE6; --pine-line:#9FC2B3;
+  --ok:#26644A; --ok-bg:#E3EFE7;
+  --warn:#7E6415; --warn-bg:#F2EBD6;
+  --stop:#8A3030; --stop-bg:#F3E2E1;
+  --typeB:#7B4FA3; --typeB-bg:#EEE6F5;
+  --typeC:#C2621A; --typeC-bg:#F7E8DC;
+  --salon:#1B8F4E; --salon-bg:#E0F0E6;
+  --shadow:0 1px 2px rgba(23,32,28,.05), 0 8px 24px -16px rgba(23,32,28,.28);
+  --serif:'Gowun Batang','Noto Serif KR','Apple SD Gothic Neo',serif;
+  --sans:'IBM Plex Sans KR','Pretendard','Apple SD Gothic Neo',-apple-system,BlinkMacSystemFont,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111614; --surface:#181F1B; --surface-2:#212A25;
+    --ink:#E6EBE6; --ink-2:#A7B2AA; --ink-3:#7C877F;
+    --rule:#2C3630; --rule-2:#3B4740;
+    --pine:#79C6A7; --pine-soft:#1B2A24; --pine-line:#3A5C4E;
+    --ok:#7CC79E; --ok-bg:#17281F;
+    --warn:#D3B569; --warn-bg:#2A2417;
+    --stop:#DE9691; --stop-bg:#2C1B1A;
+    --typeB:#9C7BCB; --typeB-bg:#26203A;
+    --typeC:#C87A33; --typeC-bg:#33251A;
+    --salon:#3FA57F; --salon-bg:#182C22;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -18px rgba(0,0,0,.7);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111614; --surface:#181F1B; --surface-2:#212A25;
+  --ink:#E6EBE6; --ink-2:#A7B2AA; --ink-3:#7C877F;
+  --rule:#2C3630; --rule-2:#3B4740;
+  --pine:#79C6A7; --pine-soft:#1B2A24; --pine-line:#3A5C4E;
+  --ok:#7CC79E; --ok-bg:#17281F;
+  --warn:#D3B569; --warn-bg:#2A2417;
+  --stop:#DE9691; --stop-bg:#2C1B1A;
+  --typeB:#9C7BCB; --typeB-bg:#26203A;
+  --typeC:#C87A33; --typeC-bg:#33251A;
+  --salon:#3FA57F; --salon-bg:#182C22;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -18px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word}
+a{color:var(--pine)}
+:focus-visible{outline:2px solid var(--pine);outline-offset:2px;border-radius:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.wrap{max-width:72rem;margin:0 auto;padding-inline:clamp(16px,4vw,40px)}
+h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.3;margin:0;text-wrap:balance}
+h1{font-size:clamp(26px,3.6vw,38px)}
+h2{font-size:clamp(20px,2.4vw,26px)}
+h3{font-size:17px}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);margin:0 0 14px}
+.eyebrow b{color:var(--pine);font-weight:600}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--ink-3)}
+.small{font-size:13px}
+
+/* masthead */
+header.mast{background:var(--surface);border-bottom:1px solid var(--rule)}
+header.mast .wrap{padding-block:clamp(32px,5vw,56px) clamp(24px,4vw,40px)}
+.lede{font-family:var(--serif);font-size:17px;color:var(--ink-2);max-width:44rem;margin:16px 0 0}
+.mast-meta{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:22px;font-size:13px;color:var(--ink-3)}
+.mast-meta b{color:var(--ink-2);font-weight:500}
+
+/* chips */
+.chip{display:inline-flex;align-items:center;gap:6px;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:.02em;line-height:1.6;white-space:nowrap}
+.chip::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.chip.B{color:var(--typeB);background:var(--typeB-bg)}
+.chip.C{color:var(--typeC);background:var(--typeC-bg)}
+.chip.S{color:var(--salon);background:var(--salon-bg)}
+.chip.ok{color:var(--ok);background:var(--ok-bg)}
+.chip.warn{color:var(--warn);background:var(--warn-bg)}
+.chip.stop{color:var(--stop);background:var(--stop-bg)}
+.chip.plain{color:var(--ink-2);background:var(--surface-2)}
+.chip.plain::before,.chip.ok::before,.chip.warn::before,.chip.stop::before{display:none}
+
+/* sections */
+section{padding-block:clamp(28px,4vw,48px)}
+section + section{border-top:1px solid var(--rule)}
+.sec-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 24px;margin-bottom:22px}
+.sec-head p{margin:6px 0 0;color:var(--ink-2);max-width:48rem}
+
+/* benchmark ledger */
+.ledger{background:var(--surface);border:1px solid var(--rule);border-radius:6px;overflow:hidden;box-shadow:var(--shadow)}
+.ledger-scroll{overflow-x:auto}
+table.bench{width:100%;border-collapse:collapse;min-width:720px}
+table.bench th,table.bench td{padding:12px 16px;vertical-align:top;text-align:left;border-bottom:1px solid var(--rule);font-size:14px}
+table.bench tr:last-child td{border-bottom:0}
+table.bench thead th{background:var(--surface-2);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+table.bench th.rowh{width:150px;color:var(--ink-2);font-weight:600;background:transparent}
+table.bench td.B{border-left:3px solid var(--typeB)}
+table.bench td.C{border-left:3px solid var(--typeC)}
+table.bench td b{font-weight:600;color:var(--ink)}
+table.bench thead .who{display:flex;flex-direction:column;gap:4px;text-transform:none;letter-spacing:0}
+table.bench thead .who .name{font-family:var(--serif);font-size:16px;color:var(--ink);font-weight:700}
+table.bench thead .who .addr{font-size:12px;color:var(--ink-3);font-weight:400}
+.constants{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.constants div{background:var(--pine-soft);border-left:3px solid var(--pine);padding:10px 14px;font-size:13.5px;color:var(--ink-2);border-radius:0 4px 4px 0}
+.constants div b{display:block;color:var(--ink);font-weight:600;margin-bottom:2px}
+
+/* compare layout */
+.cmp{display:grid;grid-template-columns:250px 1fr;gap:26px;align-items:start}
+@media (max-width:820px){.cmp{grid-template-columns:1fr}}
+.rail{position:sticky;top:12px;display:flex;flex-direction:column;gap:8px}
+@media (max-width:820px){.rail{position:static}}
+.rail h3{font-family:var(--sans);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin:6px 0 2px}
+.salon-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:10px 12px;cursor:pointer;color:var(--ink);font:inherit}
+.salon-btn:hover{border-color:var(--rule-2)}
+.salon-btn[aria-current="true"]{border-color:var(--pine);box-shadow:inset 3px 0 0 var(--pine)}
+.salon-btn .n{font-weight:600;font-size:14px;display:block}
+.salon-btn .d{font-size:12px;color:var(--ink-3);display:block}
+.salon-btn .pct{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--ink-2)}
+.btn{font:inherit;font-weight:600;font-size:13.5px;padding:8px 14px;border-radius:6px;border:1px solid var(--rule-2);background:var(--surface);color:var(--ink);cursor:pointer}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--pine);border-color:var(--pine);color:var(--surface)}
+:root[data-theme="dark"] .btn.primary{color:#0E1512}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn.primary{color:#0E1512}}
+.btn.danger{color:var(--stop);border-color:var(--stop)}
+.btn.small{padding:5px 10px;font-size:12.5px}
+.store-note{font-size:12px;color:var(--ink-3);padding:6px 2px;line-height:1.5}
+
+/* detail */
+.detail{display:flex;flex-direction:column;gap:22px;min-width:0}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:6px;box-shadow:var(--shadow)}
+.card .body{padding:18px 20px}
+.d-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px 24px;align-items:flex-start}
+.d-head .who h2{margin-bottom:4px}
+.d-head .who .addr{color:var(--ink-3);font-size:13px}
+.d-head .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.d-actions{display:flex;flex-wrap:wrap;gap:8px}
+.score{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;padding:16px 20px;border-top:1px solid var(--rule)}
+.score .big{font-family:var(--serif);font-size:44px;font-weight:700;line-height:1;color:var(--ink)}
+.score .big small{font-size:18px;color:var(--ink-3);font-weight:400}
+.score p{margin:0;color:var(--ink-2);font-size:14px}
+.seg{display:inline-flex;border:1px solid var(--rule-2);border-radius:6px;overflow:hidden}
+.seg button{font:inherit;font-size:12.5px;font-weight:600;padding:5px 11px;border:0;background:transparent;color:var(--ink-2);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface-2);color:var(--ink)}
+.quiz-line{display:flex;flex-wrap:wrap;gap:6px 14px;padding:12px 20px;border-top:1px solid var(--rule);font-size:13px;color:var(--ink-2)}
+.quiz-line span b{color:var(--ink);font-weight:600}
+.memo{padding:12px 20px;border-top:1px solid var(--rule);font-size:13.5px;color:var(--ink-2);white-space:pre-line}
+
+/* chart */
+.chart-wrap{padding:8px 12px 12px}
+svg.areas{width:100%;height:auto;display:block;font-family:var(--sans)}
+svg.areas text{fill:var(--ink-2);font-size:12.5px}
+svg.areas text.val{fill:var(--ink);font-weight:600}
+svg.areas .track{fill:var(--surface-2)}
+svg.areas .bar{fill:var(--salon)}
+svg.areas .bench-line{stroke:var(--typeB);stroke-width:1.5;stroke-dasharray:3 3}
+svg.areas .bench-line.C{stroke:var(--typeC)}
+svg.areas .hit{fill:transparent}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;padding:0 20px 14px;font-size:12.5px;color:var(--ink-3)}
+.legend i{display:inline-block;width:14px;height:8px;border-radius:2px;vertical-align:middle;margin-right:6px;background:var(--salon)}
+.legend i.line{height:0;border-top:2px dashed var(--typeB);background:none}
+.legend i.line.C{border-color:var(--typeC)}
+
+/* items table */
+.items-scroll{overflow-x:auto}
+table.items{width:100%;border-collapse:collapse;min-width:640px}
+table.items th,table.items td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule);font-size:13.5px}
+table.items thead th{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600;background:var(--surface-2)}
+table.items tr.area td{background:var(--paper);font-weight:600;color:var(--ink-2);font-size:12.5px;letter-spacing:.04em;padding-block:6px}
+table.items td.note{color:var(--ink-3);font-size:12.5px}
+table.items td .cur{font-weight:500;color:var(--ink)}
+table.items td.pt{white-space:nowrap}
+
+/* guide */
+ol.guide{list-style:none;margin:0;padding:0;counter-reset:g}
+ol.guide li{display:grid;grid-template-columns:44px 1fr;gap:0 14px;padding:14px 20px;border-bottom:1px solid var(--rule);counter-increment:g}
+ol.guide li:last-child{border-bottom:0}
+ol.guide li::before{content:counter(g);font-family:var(--serif);font-size:24px;font-weight:700;color:var(--pine);line-height:1.1}
+ol.guide .t{font-weight:600;font-size:15px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+ol.guide .gap{font-size:13px;color:var(--ink-3);margin:2px 0 6px}
+ol.guide .gap b{color:var(--ink-2);font-weight:500}
+ol.guide .act{margin:0;color:var(--ink-2);font-size:14px}
+.tier{font-size:11px;font-weight:600;color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase}
+.empty{padding:28px 20px;color:var(--ink-3);text-align:center;font-size:14px}
+
+/* editor dialog */
+dialog{border:0;border-radius:8px;padding:0;width:min(880px,calc(100vw - 32px));max-height:calc(100vh - 32px);background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+dialog::backdrop{background:rgba(10,14,12,.5)}
+dialog form{display:flex;flex-direction:column;max-height:calc(100vh - 32px)}
+.dlg-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 22px;border-bottom:1px solid var(--rule)}
+.dlg-body{overflow:auto;padding:6px 22px 18px}
+.dlg-foot{display:flex;justify-content:space-between;gap:10px;padding:14px 22px;border-top:1px solid var(--rule);background:var(--surface)}
+.dlg-foot .right{display:flex;gap:8px}
+fieldset{border:0;padding:0;margin:18px 0 0}
+fieldset legend{font-family:var(--serif);font-size:16px;font-weight:700;padding:0;margin-bottom:8px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--ink-3);font-weight:500}
+input[type=text],input[type=number],select,textarea{font:inherit;font-size:14px;color:var(--ink);background:var(--paper);border:1px solid var(--rule-2);border-radius:5px;padding:7px 9px;width:100%}
+textarea{min-height:64px;resize:vertical}
+.qrow{display:grid;grid-template-columns:120px 1fr;gap:6px 12px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--rule)}
+.qrow .q{font-size:13px;color:var(--ink-2);font-weight:500}
+.qrow .opts{display:flex;flex-wrap:wrap;gap:6px}
+.opt{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:4px 10px;border:1px solid var(--rule-2);border-radius:999px;cursor:pointer;background:var(--surface)}
+.opt input{margin:0}
+.opt:has(input:checked){border-color:var(--pine);background:var(--pine-soft);color:var(--ink)}
+.reco{margin-top:10px;font-size:13.5px;color:var(--ink-2)}
+.irow{display:grid;grid-template-columns:minmax(150px,1.2fr) minmax(160px,1fr) minmax(140px,1.4fr);gap:8px 12px;align-items:center;padding:7px 0;border-bottom:1px dashed var(--rule)}
+@media (max-width:640px){.irow{grid-template-columns:1fr}}
+.irow .l{font-size:13.5px;font-weight:500}
+.irow .l small{display:block;color:var(--ink-3);font-weight:400;font-size:12px}
+.area-h{margin:16px 0 4px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:6px;font-size:13px;z-index:20;opacity:0;transition:opacity .2s}
+.toast.on{opacity:1}
+footer{border-top:1px solid var(--rule);padding-block:22px;font-size:12.5px;color:var(--ink-3)}
+</style>
+
+<header class="mast">
+  <div class="wrap">
+    <p class="eyebrow"><b>Naver Place</b> · Busan benchmark · 2026.09 캡처 기준</p>
+    <h1>플레이스 벤치마크 비교</h1>
+    <p class="lede">부산 미용실 두 곳을 대표 성공 기준으로 두고, 같은 잣대로 우리 살롱을 채점해 내일 손댈 순서를 뽑습니다. 할인 라벨 없이 정상가로 리뷰 1만~2.6만을 쌓은 두 매장이 기준입니다.</p>
+    <div class="mast-meta">
+      <span><b>기준 B</b> 서면·전포 · SNS형 객단가(고가)</span>
+      <span><b>기준 C</b> 동래·사직 · 다점포 직영 중고가 고객수</span>
+      <span><b>채점</b> 27항목 · 8영역 · 0/1/2점 · 타입별 가중</span>
+    </div>
+  </div>
+</header>
+
+<section id="standard">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow">01 · Standard</p>
+        <h2>대표 성공 기준 두 곳</h2>
+        <p>같은 항목을 두 매장이 어떻게 다르게 썼는지가 곧 기준입니다. 비교 살롱은 먼저 자기 타입을 정하고, 그 열의 값에 맞춥니다.</p>
+      </div>
+    </div>
+    <div class="ledger"><div class="ledger-scroll">
+      <table class="bench">
+        <thead><tr>
+          <th class="rowh">항목</th>
+          <th><div class="who"><span class="chip B">기준 B · SNS형 객단가(고가)</span><span class="name">부산진구 전포대로 196 1층</span><span class="addr">전포역 8번 출구 9m · 서면·전포 카페거리 도보 상권</span></div></th>
+          <th><div class="who"><span class="chip C">기준 C · 다점포 직영 중고가 고객수</span><span class="name">동래구 여고로51번길 12 2층</span><span class="addr">사직역 2번 출구 548m · 동래·사직 주거 상권 · 본점 + 수영점</span></div></th>
+        </tr></thead>
+        <tbody>
+          <tr><th class="rowh">플레이스의 역할</th><td class="B"><b>신뢰 검증 장치</b> — SNS에서 보고, 플레이스에서 확인, 예약</td><td class="C"><b>재방문 증명 장치</b> — 동네 검색 → 뱃지 확인 → 예약</td></tr>
+          <tr><th class="rowh">평점 · 방문자 리뷰</th><td class="B"><b class="num">4.93 · 2.6만</b> (평점 5,528개 · 4,404명)</td><td class="C"><b class="num">4.97 · 1.0만</b> (평점 942개 · 477명)</td></tr>
+          <tr><th class="rowh">대표가격</th><td class="B"><b>정상가 그대로</b> · 컷 33,000 · 일반펌 150,000 · 열펌 220,000 · 염색 130,000 · 기장 +20,000/+40,000</td><td class="C"><b>시그니처 네이밍 정상가</b> · 컷 33,000~55,000 · 일반펌 121,000 · 열펌 154,000~165,000 · 염색 110,000 · 기장 +44,000/+66,000</td></tr>
+          <tr><th class="rowh">가격 설계</th><td class="B">직급별 차등요금이 곧 상품 · 가격표 이미지 4장으로 상세표 분리</td><td class="C">전 카테고리 대표 배지 8개 · 맨즈아이롱펌 154,000 시그니처 · 컷+다운펌 55,000 · 앞머리컷 5,000</td></tr>
+          <tr><th class="rowh">할인의 위치</th><td class="B">디자이너 소개문 안 "첫방문 20%" (일부) · 가격명 라벨 없음</td><td class="C">소개문 안 "최대 30%" (일부) + <b>선불권 전용 예약상품</b> + 소식탭 정책 혜택</td></tr>
+          <tr><th class="rowh">예약탭</th><td class="B">디자이너 11명 <b>전원 개별 상품</b> · 전원 "인기스타일" 뱃지 · 리뷰 수 = 직급 순</td><td class="C">디자이너 개별 상품 · <b>"재방문 많음" 뱃지 3명 동시</b> · "전 지점 남자 시술 1위"</td></tr>
+          <tr><th class="rowh">디자이너 소개문</th><td class="B">혜택 선언 + [레이어드펌, 브라운염색, 퍼스널웨딩컬러] 대괄호 + "1:1 상담" 약속</td><td class="C">데이터 문장("전 지점 1위") + 근무 지점 안내 + 재방문 약속</td></tr>
+          <tr><th class="rowh">콘텐츠</th><td class="B">스타일정보 <b class="num">242장</b> · 제목 = 시술 네이밍(허쉬펌·샌드펌) · 화이트 배경·동일 보정 · 클립 시즌 제안형</td><td class="C">제목 = <b>[디자이너명]</b> 접두 · 실내·거울 셀피 혼합 · 클립에 #사직동미용실 #동래구미용실 + 고민 카피</td></tr>
+          <tr><th class="rowh">플레이스 밖</th><td class="B">통합검색 1페이지 = 인플루언서 후기 + 고객 후기 + 공식 블로그 + 인스타 + 클립</td><td class="C">플레이스 안에서 "누가 했는지 · 어디 미용실인지" 반복 각인</td></tr>
+          <tr><th class="rowh">리뷰 답글</th><td class="B">부원장 실명 · 시술 복기(얼굴형·모질·기장) · <b>"2~3달에 한 번" 재방문 시점</b></td><td class="C">대표원장 실명 · 함께한 스태프 언급 · 다음 달 예고</td></tr>
+          <tr><th class="rowh">리뷰 키워드 지문</th><td class="B">원하는 스타일 19,284 · 친절 · 꼼꼼 · 추천 · <b>트렌디해요</b> 상위 5</td><td class="C">원하는 스타일 7,041 · 친절 · 꼼꼼 · <b>맞춤케어 · 상담 자세 · 관리법 · 남자머리</b> 등장</td></tr>
+          <tr><th class="rowh">소개문</th><td class="B"><b>브랜드 스토리형</b> · 퍼스널 컨설팅 · 프리미엄 선언 · 타깃(여성·고급) · 지역 키워드 1회</td><td class="C"><b>숫자 신뢰형</b> · "매월 1,000분 방문 · 고정고객율 90%" · 4단 약속</td></tr>
+          <tr><th class="rowh">인프라</th><td class="B">주차 불가(도보 상권 감수) · 편의시설 4개 · 세스코 멤버스 위생정보</td><td class="C">무료 타워주차 + 이용법 + 불가 차종 · 편의시설 7개 · 지역화폐(카드형)</td></tr>
+          <tr><th class="rowh">소식</th><td class="B">월간 PROMOTION 1장 — 할인 카피 없이 존재만</td><td class="C">지원금 · 지역화폐 등 생활정보</td></tr>
+        </tbody>
+      </table>
+    </div></div>
+    <div class="constants">
+      <div><b>정상가가 대표가격</b>할인은 소개문 안에만. 가격명 라벨은 쓰지 않는다.</div>
+      <div><b>예약탭은 디자이너별</b>뱃지(인기스타일·재방문)는 예약 데이터로 붙는다.</div>
+      <div><b>답글은 실명·복기·다음 방문</b>감사 인사만 있는 답글은 0.5점짜리다.</div>
+      <div><b>스타일정보에 제목 규칙</b>B는 시술 네이밍, C는 [디자이너명] 접두.</div>
+      <div><b>소식은 매월 살아 있다</b>프로모션 1장이든 생활정보든 갱신이 멈추지 않는다.</div>
+    </div>
+  </div>
+</section>
+
+<section id="compare">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow">02 · Compare</p>
+        <h2>비교 살롱</h2>
+        <p>살롱을 추가하고 플레이스 캡처에서 읽은 값을 넣으면 영역별 달성률과 개선 순서가 나옵니다. 못 읽은 값은 비워 두면 "확인 필요"로 표시됩니다.</p>
+      </div>
+      <button class="btn primary" id="btn-add" type="button">살롱 추가</button>
+    </div>
+    <div class="cmp">
+      <aside class="rail">
+        <h3>사례 · 교육자료</h3>
+        <div id="list-cases"></div>
+        <h3>추가한 살롱</h3>
+        <div id="list-salons"></div>
+        <p class="store-note" id="store-note">저장 위치를 확인하는 중입니다.</p>
+      </aside>
+      <div class="detail" id="detail"></div>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap">기준값 출처: 「네이버 플레이스, 비즈니스 타입에 따라 다르게 셋팅한다」 부산 미용인 교육자료 (2026.09). 사례 살롱 값은 같은 시점의 플레이스 화면 캡처에서 읽었으며, 캡처에 없던 값은 "미확인"으로 둡니다.</div></footer>
+
+<dialog id="editor">
+  <form method="dialog" id="editor-form">
+    <div class="dlg-head"><h2 id="editor-title">살롱 추가</h2><button class="btn small" type="button" id="btn-close">닫기</button></div>
+    <div class="dlg-body" id="editor-body"></div>
+    <div class="dlg-foot">
+      <div><button class="btn danger" type="button" id="btn-delete" hidden>삭제</button></div>
+      <div class="right"><button class="btn" type="button" id="btn-cancel">취소</button><button class="btn primary" type="submit" id="btn-save">저장</button></div>
+    </div>
+  </form>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script id="engine">
+/* ---------- scoring engine (pure: no DOM) ---------- */
+const AREAS = [
+  {id:'trust', name:'신뢰 총량'},
+  {id:'price', name:'가격'},
+  {id:'discount', name:'할인의 위치'},
+  {id:'booking', name:'예약탭'},
+  {id:'content', name:'콘텐츠'},
+  {id:'review', name:'리뷰 운영'},
+  {id:'info', name:'정보탭'},
+  {id:'news', name:'소식'},
+];
+const band = (v, hi, mid) => v >= hi ? 2 : v >= mid ? 1 : 0;
+const sel = (map) => (v, t) => { const m = map[v]; if (m === undefined) return null; return typeof m === 'object' ? m[t] : m; };
+const ITEMS = [
+  {id:'rating', area:'trust', label:'평점', kind:'num', step:'0.01', bench:{B:'4.93', C:'4.97'}, w:{B:1, C:1}, tier:{B:6, C:6},
+    score:(v)=>band(v,4.9,4.8),
+    action:{B:'평점 4.9 이상은 답글·재방문 관리의 결과값이다. 답글 100%와 시술 복기로 평점을 방어한다.', C:'재방문 고객의 리뷰가 평점을 지킨다. 답글에 스태프 언급과 다음 달 예고를 넣는다.'}},
+  {id:'reviews', area:'trust', label:'방문자 리뷰 수', kind:'num', bench:{B:'26,000', C:'10,000'}, w:{B:1, C:1}, tier:{B:6, C:6},
+    score:(v,t)=>{ const tg = t==='B'?26000:10000; return v>=tg?2:v>=tg*0.4?1:0; },
+    action:{B:'리뷰 총량은 클립·인스타·블로그가 밖에서 데려온 신규가 쌓는다. 콘텐츠 항목을 먼저 채우면 따라오는 결과값이다.', C:'예약을 한곳으로 모으고 재방문 고객에게 리뷰를 부탁한다. 선불권 고객 동선에서 리뷰가 나온다.'}},
+  {id:'priceMode', area:'price', label:'대표가격 노출 방식', kind:'sel', opts:[['normal','정상가 그대로'],['first','첫방문 할인가가 대표'],['none','가격 미등록']], bench:{B:'정상가', C:'정상가'}, w:{B:2, C:2}, tier:{B:1, C:1},
+    score:sel({normal:2, first:1, none:0}),
+    action:{B:'정상가를 대표가격으로 되돌린다. 할인은 디자이너 소개문 안으로 옮긴다. 가격이 곧 신뢰 필터다.', C:'정상가를 대표가격으로 두고 상품명에 고객 언어(고객맞춤·여신머리·인생펌)를 넣어 저항을 낮춘다.'}},
+  {id:'priceStructure', area:'price', label:'가격 설계 구조', kind:'sel', opts:[['grade','직급별 차등요금'],['signature','시그니처 네이밍 + 대표배지'],['flat','단일가 · 상품명만'],['none','없음']], bench:{B:'직급별 차등', C:'시그니처 네이밍'}, w:{B:2, C:2}, tier:{B:1, C:1},
+    score:sel({grade:{B:2,C:1}, signature:{B:1,C:2}, flat:0, none:0}),
+    action:{B:'컷·펌·열펌·염색을 직급별 차등요금으로 명시한다. 시니어 지명이 객단가를 만든다.', C:'전 카테고리에 대표 상품을 세우고 시그니처 명칭(남성 열펌 포함)을 붙인다. "무엇을 받아도 표준가"를 보여준다.'}},
+  {id:'priceImages', area:'price', label:'가격표 이미지 장수', kind:'num', bench:{B:'4장', C:'2장 이상'}, w:{B:1.5, C:1}, tier:{B:1, C:6},
+    score:(v)=>band(v,4,1),
+    action:{B:'가격표 이미지를 4장(컷·펌·열펌·염색)으로 분리해 직급별 상세표를 담고, 목록에는 기준가만 남긴다.', C:'상세 요금표는 이미지로 분리하고 목록에는 대표 상품 기준가만 둔다.'}},
+  {id:'repBadges', area:'price', label:'가격탭 대표 배지 수', kind:'num', bench:{B:'1개 이상', C:'8개 (전 카테고리)'}, w:{B:0.5, C:2}, tier:{B:6, C:1},
+    score:(v)=>band(v,5,1),
+    action:{B:'주력 시술 한 종에는 대표 배지를 붙여 기준가를 고정한다.', C:'컷·펌·열펌·염색·클리닉 전 카테고리에 대표 배지를 세운다. 기준 매장은 8개다.'}},
+  {id:'discountPos', area:'discount', label:'할인이 놓인 자리', kind:'sel', opts:[['intro','디자이너 소개문 안 문구(20~30%)'],['policy','소식·정책 혜택·선불권'],['none','할인 없음'],['label','가격명 라벨 + 쿠폰 다층']], bench:{B:'소개문 안 20%', C:'소개문 30% + 정책 혜택'}, w:{B:1.5, C:1.5}, tier:{B:6, C:6},
+    score:sel({intro:2, policy:{B:1,C:2}, none:1, label:0}),
+    action:{B:'할인은 일부 디자이너 소개문 첫줄에 "첫방문 20%"로만 조용히 둔다. 가격명 라벨·쿠폰은 걷어낸다.', C:'소개문 "첫방문 최대 30%" + 선불권 상품 + 소식탭 지원금·지역화폐 안내로 정책 결합형 혜택을 만든다.'}},
+  {id:'prepaid', area:'discount', label:'선불권 전용 예약상품', kind:'bool', bench:{B:'—', C:'있음'}, w:{B:0.5, C:1.5}, tier:{B:6, C:2},
+    score:sel({yes:2, no:0}),
+    action:{B:'고가형에서는 필수가 아니다. 재방문 고정이 필요해지면 검토한다.', C:'"선불권 이용 고객님" 전용 예약상품을 만들어 정액권 고객을 별도 동선으로 관리한다. 재방문 고정 장치다.'}},
+  {id:'designerProducts', area:'booking', label:'디자이너별 개별 상품', kind:'sel', opts:[['all','전원 개별 상품'],['some','일부만'],['none','통합 상품만']], bench:{B:'전원', C:'전원'}, w:{B:2, C:1.5}, tier:{B:2, C:2},
+    score:sel({all:2, some:1, none:0}),
+    action:{B:'예약탭을 디자이너 전원의 개별 상품으로 쪼갠다. 신규는 리뷰 수로 "누구에게 받을지"를 고른다.', C:'예약탭을 디자이너별 상품으로 쪼개야 재방문 뱃지가 개인에게 붙는다.'}},
+  {id:'designerIntro', area:'booking', label:'디자이너 소개문 3요소', kind:'sel', opts:[['full','혜택 + [전문분야] + 고객 약속'],['partial','감성 문구만'],['none','없음']], bench:{B:'혜택 · [전문분야] · 1:1 상담', C:'데이터 문장 · 재방문 약속'}, w:{B:2, C:1.5}, tier:{B:2, C:6},
+    score:sel({full:2, partial:1, none:0}),
+    action:{B:'소개문을 세 줄로 다시 쓴다. 첫줄 혜택, 둘째 줄 [레이어드펌, 브라운염색]처럼 전문분야 대괄호, 셋째 줄 "1:1 상담" 약속. 무엇을 잘하는 디자이너인지가 보여야 한다.', C:'"전 지점 남자 시술 1위" 같은 데이터 문장과 근무 지점, 재방문 약속을 소개문에 넣는다.'}},
+  {id:'popularBadge', area:'booking', label:'"인기스타일" 뱃지', kind:'sel', opts:[['all','전원'],['some','일부'],['none','없음']], bench:{B:'전원', C:'—'}, w:{B:1.5, C:0.5}, tier:{B:2, C:6},
+    score:sel({all:2, some:1, none:0}),
+    action:{B:'뱃지가 없는 디자이너에게 예약을 배분해 데이터를 쌓는다. 신입 상품에도 전문분야를 먼저 적는다.', C:'인기스타일보다 재방문 뱃지가 우선이다. 예약 일원화가 먼저다.'}},
+  {id:'revisitBadge', area:'booking', label:'"재방문 많음" 계열 뱃지', kind:'sel', opts:[['multi','3명 이상'],['some','1~2명'],['none','없음']], bench:{B:'—', C:'3명 이상 동시'}, w:{B:0.5, C:2}, tier:{B:6, C:2},
+    score:sel({multi:2, some:1, none:0}),
+    action:{B:'고가형에서도 재방문 뱃지는 자산이다. 답글의 재방문 시점 제안이 뱃지를 만든다.', C:'예약을 네이버 한곳으로 모아 "재방문 많음 / 염색·컷·펌 재방문 많음" 뱃지를 디자이너 3명 이상에게 붙인다.'}},
+  {id:'styleCount', area:'content', label:'스타일정보 장수', kind:'num', bench:{B:'242장', C:'200장 이상'}, w:{B:1.5, C:1.5}, tier:{B:3, C:6},
+    score:(v)=>band(v,240,120),
+    action:{B:'스타일정보를 240장 이상으로 채운다. 시술 네이밍 제목으로 브랜드 어휘를 만든다.', C:'[디자이너명] 접두 제목으로 200장 이상 채운다. 누가 했는지가 반복 각인된다.'}},
+  {id:'styleTitle', area:'content', label:'스타일정보 제목 규칙', kind:'sel', opts:[['naming','시술 네이밍 (허쉬펌·샌드펌)'],['designer','[디자이너명] 접두'],['none','규칙 없음']], bench:{B:'시술 네이밍', C:'[디자이너명] 접두'}, w:{B:1.5, C:1.5}, tier:{B:3, C:5},
+    score:sel({naming:{B:2,C:1}, designer:{B:1,C:2}, none:0}),
+    action:{B:'제목을 시술 네이밍(허쉬펌·샌드펌·윈드펌+밀크브라운)으로 통일한다. 고민 카피보다 네이밍된 시술이 브랜드 어휘가 된다.', C:'제목 앞에 [디자이너명]을 붙인다. "[지영] 단발 빈티지펌"처럼 누가 했는지를 먼저 보여준다.'}},
+  {id:'styleLook', area:'content', label:'스타일 사진 룩앤필', kind:'sel', opts:[['uniform','배경·톤 통일 (화이트·정면)'],['scene','매장 실내·거울 혼합 (현장감)'],['mixed','혼재']], bench:{B:'배경·톤 통일', C:'실내·거울 현장감'}, w:{B:1, C:1}, tier:{B:3, C:6},
+    score:sel({uniform:{B:2,C:1}, scene:{B:1,C:2}, mixed:0}),
+    action:{B:'화이트 배경·정면 컷·동일 보정으로 인스타 피드와 같은 룩앤필을 만든다. "브랜드 = 스타일" 등식이다.', C:'매장 실내와 거울 셀피를 섞어 현장감을 유지한다. 어디 미용실인지가 사진에 보여야 한다.'}},
+  {id:'clipFreq', area:'content', label:'클립 발행 주기', kind:'sel', opts:[['weekly','주 1회 이상'],['monthly','월 1회 이상'],['rare','거의 없음']], bench:{B:'주 1회 · 시즌 제안형', C:'지역 해시태그 + 고민 카피'}, w:{B:2, C:1}, tier:{B:4, C:5},
+    score:sel({weekly:2, monthly:1, rare:0}),
+    action:{B:'클립을 주 1회 올린다. 표지 카피는 시즌 제안형("이번 가을엔 뮤트브라운으로"). 콘텐츠가 멈추면 유입도 멈춘다.', C:'클립에 #○○동미용실 #○○구미용실 지역 해시태그와 고민 카피("잘라도 될까?")를 붙인다.'}},
+  {id:'outsideSearch', area:'content', label:'통합검색 1페이지 점유', kind:'sel', opts:[['full','인플루언서 + 고객 + 공식 블로그'],['partial','인스타 링크만 · 무관 블로그'],['none','없음']], bench:{B:'셋 다 채움', C:'—'}, w:{B:2, C:0.5}, tier:{B:4, C:6},
+    score:sel({full:2, partial:1, none:0}),
+    action:{B:'공식 블로그를 열고 인플루언서 체험 후기와 고객 후기로 통합검색 1페이지를 채운다. 인스타 공식계정을 플레이스에 연동한다.', C:'플레이스 밖보다 안이 먼저다. 지역 해시태그 클립으로 동네 검색을 잡는다.'}},
+  {id:'replyRate', area:'review', label:'리뷰 답글률 (%)', kind:'num', bench:{B:'100%', C:'100%'}, w:{B:1.5, C:1.5}, tier:{B:5, C:6},
+    score:(v)=>band(v,95,70),
+    action:{B:'모든 리뷰에 답글을 단다. 답글률이 곧 전환율이다.', C:'모든 리뷰에 답글을 단다. 재방문 리뷰일수록 빠르게.'}},
+  {id:'replyFormula', area:'review', label:'답글 공식', kind:'sel', opts:[['full','실명·직급 + 시술 복기 + 재방문 시점'],['thanks','감사 인사만'],['none','답글 없음']], bench:{B:'실명 · 복기 · "2~3달 뒤"', C:'실명 · 스태프 언급 · 다음 달 예고'}, w:{B:1.5, C:1.5}, tier:{B:5, C:6},
+    score:sel({full:2, thanks:1, none:0}),
+    action:{B:'답글을 4단으로 쓴다. 직급·실명 인사 → 얼굴형·모질·기장 복기 → "2~3달에 한 번" 재방문 시점 → 짧은 감사.', C:'대표원장 실명 답글에 함께한 스태프를 언급하고 다음 달을 예고한다.'}},
+  {id:'fingerprint', area:'review', label:'리뷰 키워드 지문', kind:'sel', opts:[['match','타입 지문 등장 (트렌디 / 맞춤케어·남자머리)'],['basic','기본 3종만 (원하는 스타일·친절·꼼꼼)'],['unknown','미확인']], bench:{B:'트렌디해요 상위 5', C:'맞춤케어·상담·남자머리 등장'}, w:{B:0.5, C:0.5}, tier:{B:6, C:6},
+    score:sel({match:2, basic:1, unknown:0}),
+    action:{B:'지문은 결과값이다. 시술 네이밍과 시즌 제안 콘텐츠가 쌓이면 "트렌디해요"가 올라온다.', C:'상담·관리법 안내를 답글과 시술 언어에 넣으면 "맞춤케어·상담 자세"가 리뷰에 나타난다.'}},
+  {id:'introType', area:'info', label:'소개문 유형', kind:'sel', opts:[['story','브랜드 스토리형'],['number','숫자 신뢰형'],['seo','검색 최적화형'],['none','미작성 · 한 줄']], bench:{B:'브랜드 스토리형', C:'숫자 신뢰형'}, w:{B:1.5, C:1.5}, tier:{B:6, C:3},
+    score:sel({story:{B:2,C:1}, number:{B:1,C:2}, seo:1, none:0}),
+    action:{B:'소개문을 스토리형으로 쓴다. 퍼스널 컨설팅 → 프리미엄 선언 → 타깃(여성·고급) 명시.', C:'소개문에 숫자를 선언한다. "매월 1,000분 이상 방문 · 고정고객율 90%" + 4단 약속.'}},
+  {id:'introKeys', area:'info', label:'소개문 필수 요소 (지역 · 타깃 · 시술군)', kind:'sel', opts:[['full','3개 모두'],['partial','1~2개'],['none','없음']], bench:{B:'지역 1회 + 타깃 명시', C:'숫자 + 4단 약속'}, w:{B:1, C:1}, tier:{B:6, C:3},
+    score:sel({full:2, partial:1, none:0}),
+    action:{B:'지역 키워드 1회("서면 ○○점"), 타깃(여성·고급), 주력 시술군을 소개문에 넣는다. 스토리형이어도 이 셋은 빠지지 않는다.', C:'지역 키워드와 남성·가족 타깃, 시그니처 시술군을 소개문에 넣는다.'}},
+  {id:'amenities', area:'info', label:'편의시설 등록 수', kind:'num', bench:{B:'4개', C:'7개'}, w:{B:0.5, C:1.5}, tier:{B:6, C:4},
+    score:(v,t)=> t==='B' ? band(v,4,2) : band(v,7,4),
+    action:{B:'체크 가능한 편의시설(두피클리닉·헤어스파·예약·무선인터넷)은 비우지 않는다.', C:'편의시설 7개(헤어스파·두피·탈모관리·예약·와이파이·남녀화장실·장애인주차)를 전부 등록한다.'}},
+  {id:'parking', area:'info', label:'주차 안내', kind:'sel', opts:[['free','무료주차 + 이용법 + 불가 차종 서술'],['paid','주차불가 표기 + 인근 유료주차 안내'],['noneInfo','주차불가만 표기'],['blank','미기재']], bench:{B:'주차불가 명시 (도보 상권)', C:'무료 + 이용법 + 불가 차종'}, w:{B:0.5, C:1.5}, tier:{B:6, C:4},
+    score:sel({free:2, paid:{B:2,C:1}, noneInfo:{B:1,C:0}, blank:0}),
+    action:{B:'주차 불가라도 찾아오는 길에 인근 주차장과 도보 동선을 서술한다.', C:'무료 주차 + 이용 방법 + 불가 차종(RV·전기차)까지 서술한다. 주차 상세도가 노쇼율이다.'}},
+  {id:'localPay', area:'info', label:'지역 결제수단 (지역화폐 · 제로페이)', kind:'bool', bench:{B:'—', C:'등록'}, w:{B:0.5, C:1}, tier:{B:6, C:4},
+    score:sel({yes:2, no:0}),
+    action:{B:'있으면 등록한다. 고가형에서 결정적이지는 않다.', C:'지역화폐(카드형)·제로페이를 결제수단에 등록해 동네 결제 습관을 흡수한다.'}},
+  {id:'hygiene', area:'info', label:'위생정보 (세스코 등) 표기', kind:'bool', bench:{B:'표기', C:'—'}, w:{B:1, C:0.5}, tier:{B:6, C:6},
+    score:sel({yes:2, no:0}),
+    action:{B:'세스코 멤버스 점검 표기는 고가형의 신뢰 요소다. 있으면 등록, 없으면 도입을 검토한다.', C:'있으면 등록한다.'}},
+  {id:'newsFreq', area:'news', label:'소식 갱신', kind:'sel', opts:[['monthly','매월 (프로모션 1장 · 생활정보)'],['quarterly','분기 · 비정기 공지'],['none','없음']], bench:{B:'월간 PROMOTION 1장', C:'생활정보 안내'}, w:{B:1.5, C:1.5}, tier:{B:6, C:6},
+    score:sel({monthly:2, quarterly:1, none:0}),
+    action:{B:'소식탭에 매월 "○월 PROMOTION" 한 장을 올린다. 할인 카피 없이 존재만 알려도 "살아 있는 매장" 신호다.', C:'지원금·지역화폐 등 생활정보를 소식으로 올린다. 정책 결합형 혜택이 할인 라벨을 대신한다.'}},
+];
+const QUIZ = [
+  {id:'q1', q:'상권', opts:[['walk','도보 번화가 (서면·전포·남포·광안리)','B'],['resi','주거 생활권 (동래·사직·연산·화명)','C']]},
+  {id:'q2', q:'고객', opts:[['fem','20~30대 여성 트렌드 70%+','B'],['male','남성·가족 30%+','C']]},
+  {id:'q3', q:'콘텐츠', opts:[['yes','매주 올릴 인력·팔로워 있음','B'],['no','없음','']]},
+  {id:'q4', q:'가격', opts:[['yes','정상가 12만↑ 할인 없이 예약 들어옴',''],['no','아니다 (A형 첫방문가 검토)','']]},
+  {id:'q5', q:'재방문', opts:[['yes','예약을 한곳에 모음','C'],['no','분산','']]},
+];
+function recommend(quiz){
+  let b=0,c=0;
+  for(const q of QUIZ){ const o=q.opts.find(x=>x[0]===quiz[q.id]); if(!o) continue; if(o[2]==='B') b++; if(o[2]==='C') c++; }
+  let type = b>c?'B':c>b?'C':(quiz.q1==='resi'?'C':'B');
+  return {type, b, c, priceFlag: quiz.q4==='no'};
+}
+function isBlank(v){ return v===undefined||v===null||v===''; }
+function scoreItem(item, answers, t){
+  const v = answers[item.id];
+  if(isBlank(v)) return null;
+  const s = item.score(item.kind==='num'?Number(v):v, t);
+  return s===undefined?null:s;
+}
+function evaluate(answers, t){
+  const rows = ITEMS.map(it=>{ const s=scoreItem(it, answers, t); return {item:it, score:s, w:it.w[t]}; });
+  const areas = AREAS.map(a=>{
+    const rs = rows.filter(r=>r.item.area===a.id);
+    const max = rs.reduce((n,r)=>n+2*r.w,0);
+    const got = rs.reduce((n,r)=>n+(r.score??0)*r.w,0);
+    return {area:a, pct:Math.round(got/max*100), rows:rs};
+  });
+  const max = rows.reduce((n,r)=>n+2*r.w,0);
+  const got = rows.reduce((n,r)=>n+(r.score??0)*r.w,0);
+  const total = Math.round(got/max*100);
+  const guide = rows.filter(r=>(r.score??0)<2)
+    .sort((a,b)=>(a.item.tier[t]-b.item.tier[t])||(b.w-a.w)||((a.score??0)-(b.score??0)));
+  return {rows, areas, total, guide};
+}
+function displayValue(item, v){
+  if(isBlank(v)) return '미확인';
+  if(item.kind==='num'){ const n=Number(v); return item.id==='replyRate'? n+'%' : n.toLocaleString('ko-KR'); }
+  if(item.kind==='bool') return v==='yes'?'있음':'없음';
+  const o=(item.opts||[]).find(x=>x[0]===v); return o?o[1]:v;
+}
+/* ---------- built-in case (from the training material captures) ---------- */
+const CASES = [{
+  id:'case:ausdruck', builtin:true,
+  name:'아우스드럭', district:'부산 수영구 광안리 · 광안역 1번 출구 694m', type:'B',
+  captured:'2026.09 캡처',
+  memo:'9월 30일 서면으로 확장 이전 예정(소식 공지). 이전 후에는 기준 B와 같은 상권에서 직접 경쟁한다. 스타일정보 281장·시술 네이밍·스토리형 소개문 등 B의 뼈대는 갖췄고, 클립·통합검색·디자이너 시그니처·답글이 비어 있다. 캡처 메모: "클립의 수가 매우 적다" · "무엇을 잘하는 디자이너인지 시그니처가 명확하지 않다".\n조민 교수 제안: "아름답다"는 강한 브랜드이나 불편 개선·만족 사례 가이드가 적어 객단가 높은 재방문 고객을 끌기 어렵고, 개인의 능력이 아닌 브랜드의 능력이 우선인 시스템이 비어 있다. 서면 이전에 따른 타겟·활동 영역·팀원 유입/유지·고객수 확보 전략과 운영 매뉴얼 변경이 함께 필요하다.',
+  quiz:{q1:'walk', q2:'fem', q3:'yes', q4:'yes', q5:'no'},
+  answers:{rating:4.93, reviews:7796, priceMode:'normal', priceStructure:'grade', priceImages:1, repBadges:0, discountPos:'none', prepaid:'no', designerProducts:'all', designerIntro:'partial', popularBadge:'some', revisitBadge:'some', styleCount:281, styleTitle:'naming', styleLook:'uniform', clipFreq:'rare', outsideSearch:'partial', replyRate:'', replyFormula:'', fingerprint:'basic', introType:'story', introKeys:'none', amenities:5, parking:'paid', localPay:'yes', hygiene:'', newsFreq:'quarterly'},
+  notes:{rating:'매장 평점 캡처 미표시. 디자이너 4.93 · 4.92 · 5.0', reviews:'블로그 리뷰 97', priceStructure:'디자인펌 220,000 "직급별 차등" · 숏 염색 "기장별 차등"', priceImages:'전체 메뉴판 1장', repBadges:'기본가 4줄만, 대표 배지 없음', designerProducts:'네이버 예약 6', designerIntro:'"취향을 담아, 손질 편한 디자인" 등 감성 문구만', popularBadge:'예진 실장 · 도연 실장 2명', revisitBadge:'예진 실장 "펌 재방문 많음" 1명', styleTitle:'레이어드컷 매트브라운 · 토프브라운 허쉬펌 · 시스루뱅 레이어드펌', styleLook:'흰 옷·밝은 배경 셀피 위주, 배경은 화이트 벽·그레이·거울 혼재', clipFreq:'3개 안팎 · "BUSAN 광안리 미용실 느좋 힙한데"', outsideSearch:'인스타 공식계정 링크 있음 · 블로그 상단은 무관한 일상 블로그', replyRate:'캡처에 답글 없음 · 확인 필요', replyFormula:'확인 필요', fingerprint:'"원하는 스타일로 잘해줘요" 1위 · 6번째·3번째 방문 리뷰', introType:'"15년 이상 경력의 청담 출신 대표원장 · art brand · ausdruck(표현·표출)"', introKeys:'지역 0회 · 타깃·시술군 없음', amenities:'헤어스파·두피클리닉·예약·무선인터넷·남녀화장실', parking:'주차 불가 + 인근 유료주차·주차비 일부 지원 서술', localPay:'제로페이', hygiene:'캡처 미확인', newsFreq:'공지 3건(확장이전 8월 · 반려동물 12월 · 일행 동반 2월) · 프로모션 없음'},
+}];
+if (typeof module !== 'undefined') module.exports = {AREAS, ITEMS, QUIZ, CASES, evaluate, recommend, displayValue};
+</script>
+
+<script>
+/* ---------- app ---------- */
+const $ = (s, el=document) => el.querySelector(s);
+const esc = s => String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const state = { salons:[], sel:CASES[0].id, viewType:null, store:'none', db:null, unsub:null };
+
+/* storage: db capability with localStorage fallback */
+const LS_KEY = 'place-benchmark-salons';
+const store = {
+  async init(){
+    let db = null;
+    try { db = window.claude && window.claude.use ? await window.claude.use('db') : null; } catch(e){ db = null; }
+    if (db) {
+      state.db = db; state.store = 'db';
+      const col = db.collection('salons');
+      state.unsub = col.orderBy('createdAt').onSnapshot(snap=>{
+        state.salons = snap.docs.filter(d=>d.exists).map(d=>({id:d.id, ...d.data()}));
+        renderAll();
+      }, err=>{ state.store='local'; store.loadLocal(); renderAll(); });
+    } else {
+      state.store = 'local'; store.loadLocal();
+    }
+    renderAll();
+  },
+  loadLocal(){ try { state.salons = JSON.parse(localStorage.getItem(LS_KEY)||'[]'); } catch(e){ state.salons = []; } },
+  saveLocal(){ try { localStorage.setItem(LS_KEY, JSON.stringify(state.salons)); } catch(e){} },
+  async upsert(rec){
+    const now = new Date().toISOString();
+    if (state.store==='db') {
+      const col = state.db.collection('salons');
+      if (rec.id) { const {id, ...body} = rec; await col.doc(id).set({...body, updatedAt:now}); return id; }
+      const ref = await col.add({...rec, createdAt:now, updatedAt:now}); return ref.id;
+    }
+    if (rec.id) { const i = state.salons.findIndex(s=>s.id===rec.id); state.salons[i] = {...rec, updatedAt:now}; }
+    else { rec.id = 's'+Date.now().toString(36); rec.createdAt = now; rec.updatedAt = now; state.salons.push(rec); }
+    store.saveLocal(); renderAll(); return rec.id;
+  },
+  async remove(id){
+    if (state.store==='db') { await state.db.collection('salons').doc(id).delete(); return; }
+    state.salons = state.salons.filter(s=>s.id!==id); store.saveLocal(); renderAll();
+  }
+};
+
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('on'),2200); }
+function current(){ return CASES.find(c=>c.id===state.sel) || state.salons.find(s=>s.id===state.sel) || CASES[0]; }
+
+function renderAll(){
+  renderList(); renderDetail();
+  $('#store-note').textContent = state.store==='db' ? '추가한 살롱은 이 페이지의 공유 저장소에 저장되어 팀 누구나 같은 목록을 봅니다.' : state.store==='local' ? '지금은 이 브라우저에만 저장됩니다. claude.ai 뷰어에서 열면 팀과 공유되는 저장소를 씁니다.' : '저장 위치를 확인하는 중입니다.';
+}
+function salonButton(s){
+  const t = s.type||'B';
+  const ev = evaluate(s.answers||{}, t);
+  return `<button class="salon-btn" type="button" data-id="${esc(s.id)}" aria-current="${state.sel===s.id}"><span><span class="n">${esc(s.name)}</span><span class="d"><span class="chip ${t}" style="padding:0 6px;font-size:11px">${t}</span> ${esc(s.district||'')}</span></span><span class="pct num">${ev.total}%</span></button>`;
+}
+function renderList(){
+  $('#list-cases').innerHTML = CASES.map(salonButton).join('');
+  $('#list-salons').innerHTML = state.salons.length ? state.salons.map(salonButton).join('') : '<p class="store-note">아직 없습니다. "살롱 추가"로 첫 살롱을 넣으세요.</p>';
+  document.querySelectorAll('.salon-btn').forEach(b=>b.addEventListener('click',()=>{ state.sel=b.dataset.id; state.viewType=null; renderAll(); }));
+}
+function areaChart(ev, t){
+  const W=640, L=110, R=56, rowH=34, top=8, H=top+ev.areas.length*rowH+8, bw=W-L-R;
+  let g='';
+  ev.areas.forEach((a,i)=>{
+    const y=top+i*rowH, w=Math.max(0,bw*a.pct/100);
+    g+=`<g><title>${esc(a.area.name)} ${a.pct}% (기준 100%)</title>
+      <rect class="hit" x="0" y="${y}" width="${W}" height="${rowH}"/>
+      <text x="${L-10}" y="${y+rowH/2+4}" text-anchor="end">${esc(a.area.name)}</text>
+      <rect class="track" x="${L}" y="${y+9}" width="${bw}" height="${rowH-18}" rx="3"/>
+      <rect class="bar" x="${L}" y="${y+9}" width="${w}" height="${rowH-18}" rx="3"/>
+      <text class="val num" x="${L+bw+10}" y="${y+rowH/2+4}">${a.pct}%</text></g>`;
+  });
+  g+=`<line class="bench-line ${t}" x1="${L+bw}" x2="${L+bw}" y1="${top}" y2="${H-8}"/>`;
+  return `<svg class="areas" viewBox="0 0 ${W} ${H}" role="img" aria-label="영역별 달성률">${g}</svg>`;
+}
+function renderDetail(){
+  const s = current(); const savedType = s.type||'B'; const t = state.viewType||savedType;
+  const ev = evaluate(s.answers||{}, t); const reco = recommend(s.quiz||{});
+  const notes = s.notes||{};
+  const unknown = ev.rows.filter(r=>r.score===null).length;
+  const quizLine = QUIZ.map(q=>{ const o=q.opts.find(x=>x[0]===(s.quiz||{})[q.id]); return `<span>${esc(q.q)} <b>${o?esc(o[1]):'—'}</b></span>`; }).join('');
+  let itemsHtml='';
+  for (const a of ev.areas) {
+    itemsHtml += `<tr class="area"><td colspan="5">${esc(a.area.name)} · ${a.pct}%</td></tr>`;
+    for (const r of a.rows) {
+      const chip = r.score===null ? '<span class="chip warn">확인 필요</span>' : r.score===2 ? '<span class="chip ok">기준</span>' : r.score===1 ? '<span class="chip warn">부분</span>' : '<span class="chip stop">미달</span>';
+      itemsHtml += `<tr><td>${esc(r.item.label)}</td><td>${esc(r.item.bench[t])}</td><td><span class="cur">${esc(displayValue(r.item, (s.answers||{})[r.item.id]))}</span></td><td class="note">${esc(notes[r.item.id]||'')}</td><td class="pt">${chip} <span class="muted small num">×${r.w}</span></td></tr>`;
+    }
+  }
+  const tierName = {1:'우선순위 1',2:'우선순위 2',3:'우선순위 3',4:'우선순위 4',5:'우선순위 5',6:'그 다음'};
+  const guideHtml = ev.guide.length ? `<ol class="guide">${ev.guide.map(r=>`<li><div><div class="t">${esc(r.item.label)} ${r.score===null?'<span class="chip warn">확인 필요</span>':r.score===1?'<span class="chip warn">부분</span>':'<span class="chip stop">미달</span>'} <span class="tier">${tierName[r.item.tier[t]]}</span></div><div class="gap">현재 <b>${esc(displayValue(r.item,(s.answers||{})[r.item.id]))}</b> → 기준 <b>${esc(r.item.bench[t])}</b></div><p class="act">${esc(r.item.action[t])}</p></div></li>`).join('')}</ol>` : '<p class="empty">모든 항목이 기준에 도달했습니다.</p>';
+  $('#detail').innerHTML = `
+    <div class="card">
+      <div class="body d-head">
+        <div class="who"><h2>${esc(s.name)}</h2><div class="addr">${esc(s.district||'')}${s.captured?' · '+esc(s.captured):''}</div>
+          <div class="chips"><span class="chip ${savedType}">목표 타입 ${savedType}</span><span class="chip plain">판정 결과 ${reco.type} (B ${reco.b} · C ${reco.c})</span>${reco.priceFlag?'<span class="chip stop">정상가 노출 전략 재검토</span>':''}${unknown?`<span class="chip warn">미확인 ${unknown}</span>`:''}${s.builtin?'<span class="chip plain">교육자료 사례</span>':''}</div></div>
+        <div class="d-actions">
+          <div class="seg" role="group" aria-label="비교 기준"><button type="button" data-vt="B" aria-pressed="${t==='B'}">B 기준으로</button><button type="button" data-vt="C" aria-pressed="${t==='C'}">C 기준으로</button></div>
+          ${s.builtin ? '<button class="btn" type="button" id="btn-clone">복제해서 편집</button>' : '<button class="btn" type="button" id="btn-edit">편집</button>'}
+          <button class="btn" type="button" id="btn-copy">가이드 복사</button>
+        </div>
+      </div>
+      <div class="score"><div class="big num">${ev.total}<small>%</small></div><p>기준 ${t} 대비 전체 달성률. 27항목의 점수(0·1·2)에 타입별 가중치를 곱해 합산했습니다. 미확인 항목은 0점으로 계산됩니다.</p></div>
+      <div class="quiz-line">${quizLine}</div>
+      ${s.memo?`<div class="memo">${esc(s.memo)}</div>`:''}
+    </div>
+    <div class="card"><div class="body" style="padding-bottom:4px"><h3>영역별 달성률</h3></div><div class="chart-wrap">${areaChart(ev,t)}</div><div class="legend"><span><i></i>${esc(s.name)}</span><span><i class="line ${t}"></i>기준 ${t} = 100%</span></div></div>
+    <div class="card"><div class="body" style="padding-bottom:6px"><h3>항목별 비교</h3></div><div class="items-scroll"><table class="items"><thead><tr><th>항목</th><th>기준 ${t}</th><th>현재</th><th>근거 메모</th><th>판정 · 가중</th></tr></thead><tbody>${itemsHtml}</tbody></table></div></div>
+    <div class="card"><div class="body" style="padding-bottom:6px"><h3>개선 가이드 · ${ev.guide.length}건</h3><p class="small muted" style="margin:4px 0 0">교육자료 "타입별 셋팅 우선순위" 순서로 정렬했습니다. 같은 순위 안에서는 가중치가 큰 항목이 먼저입니다.</p></div>${guideHtml}</div>`;
+  document.querySelectorAll('[data-vt]').forEach(b=>b.addEventListener('click',()=>{ state.viewType=b.dataset.vt; renderDetail(); }));
+  const ed=$('#btn-edit'); if(ed) ed.addEventListener('click',()=>openEditor(s));
+  const cl=$('#btn-clone'); if(cl) cl.addEventListener('click',()=>openEditor({...s, id:undefined, builtin:false, name:s.name+' (복제)'}));
+  $('#btn-copy').addEventListener('click',()=>{
+    const lines=[`${s.name} — 기준 ${t} 대비 ${ev.total}%`, ...ev.areas.map(a=>`${a.area.name} ${a.pct}%`), '', '개선 가이드', ...ev.guide.map((r,i)=>`${i+1}. ${r.item.label} · 현재 ${displayValue(r.item,(s.answers||{})[r.item.id])} → 기준 ${r.item.bench[t]}\n   ${r.item.action[t]}`)];
+    navigator.clipboard.writeText(lines.join('\n')).then(()=>toast('가이드를 복사했습니다.'), ()=>toast('복사할 수 없습니다. 브라우저 권한을 확인하세요.'));
+  });
+}
+
+/* editor */
+let editing=null;
+function openEditor(s){
+  editing = s; const isNew = !s.id;
+  $('#editor-title').textContent = isNew ? '살롱 추가' : '살롱 편집';
+  $('#btn-delete').hidden = isNew;
+  const a = s.answers||{}, n = s.notes||{}, q = s.quiz||{};
+  let html = `<fieldset><legend>기본 정보</legend><div class="fgrid">
+    <label class="f">살롱 이름<input type="text" id="f-name" name="name" required value="${esc(s.name||'')}"></label>
+    <label class="f">지역 · 위치<input type="text" id="f-district" name="district" value="${esc(s.district||'')}" placeholder="부산 ○○구 · ○○역 ○번 출구 ○m"></label>
+    <label class="f">목표 타입<select id="f-type" name="type"><option value="B" ${ (s.type||'B')==='B'?'selected':''}>B · SNS형 객단가(고가)</option><option value="C" ${s.type==='C'?'selected':''}>C · 다점포 직영 중고가 고객수</option></select></label>
+    </div><label class="f" style="margin-top:10px">메모<textarea id="f-memo" name="memo">${esc(s.memo||'')}</textarea></label></fieldset>`;
+  html += `<fieldset><legend>타입 판정 5문</legend>` + QUIZ.map(qq=>`<div class="qrow"><div class="q">${esc(qq.q)}</div><div class="opts">${qq.opts.map(o=>`<label class="opt"><input type="radio" name="quiz-${qq.id}" value="${o[0]}" ${q[qq.id]===o[0]?'checked':''}>${esc(o[1])}</label>`).join('')}</div></div>`).join('') + `<p class="reco" id="reco"></p></fieldset>`;
+  html += `<fieldset><legend>27항목 채점 입력</legend><p class="small muted" style="margin:0 0 4px">캡처에서 읽은 값을 넣습니다. 확인하지 못한 값은 비워 둡니다.</p>`;
+  for (const ar of AREAS) {
+    html += `<div class="area-h">${esc(ar.name)}</div>`;
+    for (const it of ITEMS.filter(i=>i.area===ar.id)) {
+      let input='';
+      if (it.kind==='num') input = `<input type="number" id="f-${it.id}" name="a-${it.id}" step="${it.step||'1'}" min="0" value="${esc(a[it.id]??'')}" placeholder="미확인">`;
+      else if (it.kind==='bool') input = `<select id="f-${it.id}" name="a-${it.id}"><option value="">미확인</option><option value="yes" ${a[it.id]==='yes'?'selected':''}>있음</option><option value="no" ${a[it.id]==='no'?'selected':''}>없음</option></select>`;
+      else input = `<select id="f-${it.id}" name="a-${it.id}"><option value="">미확인</option>${it.opts.map(o=>`<option value="${o[0]}" ${a[it.id]===o[0]?'selected':''}>${esc(o[1])}</option>`).join('')}</select>`;
+      html += `<div class="irow"><div class="l">${esc(it.label)}<small>기준 B ${esc(it.bench.B)} · C ${esc(it.bench.C)}</small></div><div>${input}</div><div><input type="text" id="f-note-${it.id}" name="n-${it.id}" value="${esc(n[it.id]||'')}" placeholder="근거 메모"></div></div>`;
+    }
+  }
+  html += `</fieldset>`;
+  $('#editor-body').innerHTML = html;
+  const updateReco = ()=>{ const qq={}; QUIZ.forEach(x=>{ const c=$(`input[name="quiz-${x.id}"]:checked`); if(c) qq[x.id]=c.value; }); const r=recommend(qq); $('#reco').innerHTML = `판정: <b>타입 ${r.type}</b> (B 신호 ${r.b} · C 신호 ${r.c})${r.priceFlag?' · 정상가 노출 전략을 먼저 재검토하세요':''}. 목표 타입은 위에서 직접 고를 수 있습니다.`; };
+  document.querySelectorAll('#editor-body input[type=radio]').forEach(r=>r.addEventListener('change',updateReco)); updateReco();
+  $('#editor').showModal(); $('#editor-body').scrollTop=0;
+}
+$('#editor-form').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const rec = { id: editing.id, name: $('#f-name').value.trim(), district: $('#f-district').value.trim(), type: $('#f-type').value, memo: $('#f-memo').value.trim(), quiz:{}, answers:{}, notes:{} };
+  if (!rec.name) { $('#f-name').focus(); return; }
+  QUIZ.forEach(x=>{ const c=$(`input[name="quiz-${x.id}"]:checked`); if(c) rec.quiz[x.id]=c.value; });
+  ITEMS.forEach(it=>{ const v=$(`#f-${it.id}`).value; if(v!=='') rec.answers[it.id] = it.kind==='num'?Number(v):v; const nv=$(`#f-note-${it.id}`).value.trim(); if(nv) rec.notes[it.id]=nv; });
+  if (editing.createdAt) rec.createdAt = editing.createdAt;
+  try { const id = await store.upsert(rec); state.sel = id; state.viewType=null; $('#editor').close(); toast('저장했습니다.'); renderAll(); }
+  catch(err){ toast(err && err.code==='quota_exceeded' ? '저장소가 가득 찼습니다. 오래된 살롱을 삭제하세요.' : '저장하지 못했습니다. 잠시 후 다시 시도하세요.'); }
+});
+$('#btn-delete').addEventListener('click', async ()=>{
+  if (!editing || !editing.id) return;
+  if (!confirm(`"${editing.name}"을(를) 삭제할까요?`)) return;
+  try { await store.remove(editing.id); state.sel = CASES[0].id; $('#editor').close(); toast('삭제했습니다.'); renderAll(); } catch(err){ toast('삭제하지 못했습니다.'); }
+});
+$('#btn-cancel').addEventListener('click',()=>$('#editor').close());
+$('#btn-close').addEventListener('click',()=>$('#editor').close());
+$('#btn-add').addEventListener('click',()=>openEditor({type:'B', quiz:{}, answers:{}, notes:{}}));
+
+renderAll();
+store.init();
+</script>
