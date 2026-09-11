@@ -12,7 +12,9 @@
 
 비즈니스 타입(기준 문서 §0)은 카드의 '| 비즈니스 타입 | ... |' 행에서 읽는다.
 '프랜차이즈'가 들어 있으면 프랜차이즈 고객수 타입(기준 A 이가자 · 상위 B 로한),
-'로컬'이 들어 있으면 지역 로컬 고객수 타입(기준 L 온앤어스 · 상위 A 이가자)으로 판정한다.
+'로컬'이 들어 있으면 지역 로컬 고객수 타입(기준 L 온앤어스 · 상위 A 이가자),
+'상위 가격대' 또는 '프리미엄'이 들어 있으면 상위 가격대 타입(객단가 8~9만원 · 기준 P 아이디헤어 대치점 · 상위 A 이가자)으로 판정한다.
+상위 가격대 타입은 앵커 목표 구간이 80,000~99,000원으로 바뀐다 (기준 문서 §0-4).
 
 정성 판단(한 줄 결론·처방 문안·로드맵 세부)은 출력된 뼈대 위에 사람이/Claude가 채운다.
 기준값을 바꾸려면 아래 BENCH·ITEMS 를 고치지 말고 00-정의 문서를 먼저 개정한 뒤 여기에 반영한다.
@@ -44,16 +46,33 @@ BENCH_BY_TYPE = {
         "스타일정보":   (300, 300, "단기충전",   "P1"),
         "가격표 이미지": (10, 10, "단기충전",    "P1"),
     },
+    # 상위 가격대(객단가 8~9만원): 기준 P 아이디헤어 대치점 2026-09 실측(잠정) · 상위 A 이가자
+    # 축적형은 P 실측, 단기충전은 90일 목표. 상위 가격대 벤치마크가 추가되면 이 값을 교체한다.
+    "프리미엄": {
+        "평점":        (4.93, 4.92, "품질",     None),
+        "방문자 리뷰":  (9656, 14132, "축적형",  "P2"),
+        "블로그 리뷰":  (None, 1172, "축적형",   "P2"),
+        "스타일정보":   (300, 300, "단기충전",   "P1"),
+        "가격표 이미지": (10, 10, "단기충전",    "P1"),
+    },
+}
+# 앵커(대표 배지·주력 노출가) 목표 구간 — 타입별
+ANCHOR_BY_TYPE = {
+    "프랜차이즈": (60000, 79000),
+    "로컬":      (60000, 79000),
+    "프리미엄":   (80000, 99000),
 }
 TYPE_LABEL = {
     "프랜차이즈": ("프랜차이즈 고객수", "A 이가자헤어비스 신도림점", "B 로한 (디얼스 목동41타워점)"),
     "로컬":      ("지역 로컬 고객수",  "L 온앤어스헤어 불당점",   "A 이가자헤어비스 신도림점"),
+    "프리미엄":   ("상위 가격대 (객단가 8~9만원)", "P 아이디헤어 대치점 (잠정)", "A 이가자헤어비스 신도림점"),
 }
 RESERVE_STRUCT = {
     "프랜차이즈": "디자이너 5 + 안내형 1 + 이벤트형 1",
     "로컬":      "디자이너 5~6 + 추천형 1 + 이벤트형 1 (90일 목표 7)",
+    "프리미엄":   "디자이너별 + 안내형 1 + 이벤트형 1 (직급 표기)",
 }
-RESERVE_TOP = {"프랜차이즈": "11개", "로컬": "5 + 2"}
+RESERVE_TOP = {"프랜차이즈": "11개", "로컬": "5 + 2", "프리미엄": "5 + 2"}
 
 # 쿠폰 퍼널 4축: 지표명 → 미충족 시 등급
 FUNNEL = {
@@ -63,8 +82,7 @@ FUNNEL = {
     "쿠폰 재방문": "P1",
 }
 
-ANCHOR_LO, ANCHOR_HI = 60000, 79000   # 앵커 목표 구간
-VERIFY_GAP = 15000                     # 앵커-가중평균 격차 경고선
+VERIFY_GAP = 15000                     # 앵커-가중평균 격차 경고선 (상위 가격대는 20,000 — 기준 문서 §0-4)
 
 # 32항목: 번호 → (영역, 항목명, 미충족 시 등급)
 ITEMS = {
@@ -171,12 +189,12 @@ def parse_card(path: Path):
 def detect_type(text: str):
     """'프랜차이즈 고객수' / '지역 로컬 고객수' 문자열 → 키. 양식 안내문(둘 다 포함)은 None."""
     t = (text or "").strip()
-    has_f, has_l = "프랜차이즈" in t, ("로컬" in t or "지역" in t)
-    if has_f and not has_l:
-        return "프랜차이즈"
-    if has_l and not has_f:
-        return "로컬"
-    return None
+    has_f = "프랜차이즈" in t
+    has_l = "로컬" in t or "지역" in t
+    has_p = "상위 가격대" in t or "프리미엄" in t
+    if sum([has_f, has_l, has_p]) != 1:
+        return None  # 양식 안내문처럼 둘 이상 들어 있으면 판정하지 않는다
+    return "프랜차이즈" if has_f else "로컬" if has_l else "프리미엄"
 
 
 # ---------------------------------------------------------------------------
@@ -185,11 +203,14 @@ def detect_type(text: str):
 
 def quant_gap(metrics, btype):
     BENCH = BENCH_BY_TYPE[btype]
-    BENCH_TOP = {k: max(v[0], v[1]) for k, v in BENCH.items()}
+    BENCH_TOP = {k: max(x for x in v[:2] if x is not None) for k, v in BENCH.items()}
     out = []
     for key, (a, b, kind, grade) in BENCH.items():
         raw = metrics.get(key, {}).get("raw", "")
         v = _num(raw)
+        if a is None:
+            out.append((key, "기준 미정", b, v if v is not None else "미입력", "", "", "기준값 미정 — 상위값과만 대조"))
+            continue
         if v is None:
             out.append((key, a, b, "미입력", "", "", "확인 필요"))
             continue
@@ -230,7 +251,8 @@ def funnel_gap(metrics):
     return out
 
 
-def price_diag(metrics):
+def price_diag(metrics, btype):
+    ANCHOR_LO, ANCHOR_HI = ANCHOR_BY_TYPE[btype]
     g = lambda k: _num(metrics.get(k, {}).get("raw", ""))
     badge, anchor, lo, hi = g("대표배지 가격"), g("주력 앵커 노출가"), g("최저 시술가"), g("최고 시술가")
     lines = []
@@ -281,7 +303,7 @@ def area_verdicts(checks):
 def action_lists(checks, quant, btype):
     """보완점(P0/P1/P2 그룹) · 개선점 · 유지 목록."""
     BENCH = BENCH_BY_TYPE[btype]
-    BENCH_TOP = {k: max(v[0], v[1]) for k, v in BENCH.items()}
+    BENCH_TOP = {k: max(x for x in v[:2] if x is not None) for k, v in BENCH.items()}
     fix = {"P0": [], "P1": [], "P2": []}
     keep = []
     for n, (area, item, grade) in ITEMS.items():
@@ -307,7 +329,7 @@ def render(name, snap, btype, metrics, checks):
     tlabel, tbase, ttop = TYPE_LABEL[btype]
     quant = quant_gap(metrics, btype)
     funnel = funnel_gap(metrics)
-    price = price_diag(metrics)
+    price = price_diag(metrics, btype)
     areas = area_verdicts(checks)
     fix, improve, keep = action_lists(checks, quant, btype)
     n_p0 = len(fix["P0"]); n_p1 = len(fix["P1"]); n_p2 = len(fix["P2"])
@@ -340,7 +362,7 @@ def render(name, snap, btype, metrics, checks):
     w(f"| 지표 | 기준값 ({tbase.split()[0]}) | 상위값 ({ttop.split()[0]}) | 진단값 | GAP | 달성률 | 판정 |")
     w("| --- | --- | --- | --- | --- | --- | --- |")
     for (k, a, b, v, gap, rate, verdict) in quant:
-        fa = f"{a:,.2f}" if k == "평점" else f"{a:,.0f}"
+        fa = a if isinstance(a, str) else (f"{a:,.2f}" if k == "평점" else f"{a:,.0f}")
         fb = f"{b:,.2f}" if k == "평점" else f"{b:,.0f}"
         if isinstance(v, float):
             fv = f"{v:,.2f}" if k == "평점" else f"{v:,.0f}"
@@ -470,7 +492,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("card", type=Path, help="브랜드 카드 .md")
     ap.add_argument("-o", "--out", type=Path, help="출력 파일 (기본: 표준출력)")
-    ap.add_argument("--type", choices=list(BENCH_BY_TYPE), help="비즈니스 타입 강제 지정 (프랜차이즈 / 로컬)")
+    ap.add_argument("--type", choices=list(BENCH_BY_TYPE), help="비즈니스 타입 강제 지정 (프랜차이즈 / 로컬 / 프리미엄)")
     a = ap.parse_args()
     name, snap, btype, metrics, checks = parse_card(a.card)
     btype = a.type or btype
