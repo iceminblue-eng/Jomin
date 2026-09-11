@@ -16,7 +16,7 @@ const docx = require(path.join(__dirname, "node_modules", "docx", "build", "inde
 const {
   Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, WidthType,
   AlignmentType, HeadingLevel, BorderStyle, ShadingType, LevelFormat, PageOrientation,
-  Header, Footer, PageNumber, TabStopType,
+  Header, Footer, PageNumber, TabStopType, ImageRun,
 } = docx;
 
 const [,, inPath, outPath, ...flags] = process.argv;
@@ -95,10 +95,14 @@ function parse(md) {
       blocks.push({ t: "ol", items }); continue;
     }
     if (/^\s*(-{3,}|\*{3,})\s*$/.test(l)) { blocks.push({ t: "hr" }); i++; continue; }
+    if (/^\s*!\[.*\]\([^()]+\)\s*$/.test(l)) {
+      const m = l.match(/^\s*!\[(.*)\]\(([^()]+)\)\s*$/);   // 캡션 안의 [ ] 허용, 경로에는 괄호 없음
+      blocks.push({ t: "img", caption: m[1], src: m[2] }); i++; continue;
+    }
     if (l.trim() === "") { i++; continue; }
     const buf = [l.trim()];
     i++;
-    while (i < lines.length && lines[i].trim() !== "" && !/^(\s*\||#{1,6}\s|\s*>|\s*[-*]\s|\s*\d+\.\s|```|\s*-{3,}\s*$)/.test(lines[i])) buf.push(lines[i++].trim());
+    while (i < lines.length && lines[i].trim() !== "" && !/^(\s*\||#{1,6}\s|\s*>|\s*[-*]\s|\s*\d+\.\s|```|\s*-{3,}\s*$|\s*!\[)/.test(lines[i])) buf.push(lines[i++].trim());
     blocks.push({ t: "p", text: buf.join(" ") });
   }
   return blocks;
@@ -130,6 +134,12 @@ function table(rows) {
   return new Table({ width: { size: pageW, type: WidthType.DXA }, columnWidths: widths, rows: trs });
 }
 
+function pngSize(buf) {
+  // PNG IHDR: width/height at byte 16/20 (big-endian)
+  if (buf.length > 24 && buf.toString("ascii", 1, 4) === "PNG") return { w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) };
+  return { w: 800, h: 600 };
+}
+
 function render(blocks) {
   const out = [];
   let firstH1 = true;
@@ -154,6 +164,20 @@ function render(blocks) {
       case "code": for (const l of b.lines) out.push(new Paragraph({ children: [new TextRun({ text: l || " ", font: MONO, size: BODY - 2 })], shading: { type: ShadingType.CLEAR, fill: GREY, color: "auto" }, spacing: { after: 0 }, indent: { left: 200 } })); out.push(new Paragraph({ spacing: { after: 100 } })); break;
       case "hr": out.push(new Paragraph({ border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: LINE } }, spacing: { before: 120, after: 200 } })); break;
       case "table": out.push(table(b.rows)); out.push(new Paragraph({ spacing: { after: 120 } })); break;
+      case "img": {
+        const file = path.resolve(path.dirname(inPath), b.src);
+        if (!fs.existsSync(file)) { out.push(new Paragraph({ children: [new TextRun({ text: `[이미지 없음: ${b.src}]`, color: "C00000", size: BODY })] })); break; }
+        const data = fs.readFileSync(file);
+        const dim = pngSize(data);
+        const maxW = Math.floor(pageW / 15), maxH = 560;       // DXA → px (96dpi)
+        let w = dim.w, h = dim.h;
+        const k = Math.min(maxW / w, maxH / h, 1);
+        w = Math.round(w * k); h = Math.round(h * k);
+        out.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 120, after: 40 }, keepNext: true,
+          children: [new ImageRun({ type: "png", data, transformation: { width: w, height: h } })] }));
+        if (b.caption) out.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 200 }, children: inline(b.caption, { size: BODY - 2, color: "595959", italics: true }) }));
+        break;
+      }
     }
   }
   return out;
