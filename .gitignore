@@ -4,3 +4,8 @@ build/chapters.json
 # 배포용 묶음 — 내용물이 모두 개별 추적되므로 커밋하지 않는다
 # (tools/build_all.sh 가 재생성)
 build/*.zip
+
+# 도구 의존성 (npm)
+tools/node_modules/
+tools/package.json
+tools/package-lock.json
