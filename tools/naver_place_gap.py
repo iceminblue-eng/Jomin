@@ -50,7 +50,7 @@ BENCH_BY_TYPE = {
     # 축적형은 P 실측, 단기충전은 90일 목표. 상위 가격대 벤치마크가 추가되면 이 값을 교체한다.
     "프리미엄": {
         "평점":        (4.93, 4.92, "품질",     None),
-        "방문자 리뷰":  (9656, 14132, "축적형",  "P2"),
+        "방문자 리뷰":  (7758, 14132, "축적형",  "P2"),   # 홈 탭 '방문자 리뷰' 값 (헤더 9,656은 블로그 포함 합계)
         "블로그 리뷰":  (None, 1172, "축적형",   "P2"),
         "스타일정보":   (300, 300, "단기충전",   "P1"),
         "가격표 이미지": (10, 10, "단기충전",    "P1"),
@@ -344,7 +344,7 @@ def render(name, snap, btype, metrics, checks):
     w(f"| --- | --- |")
     w(f"| 스냅샷 일자 | {snap or '(카드에 미기재)'} |")
     w(f"| 비즈니스 타입 | **{tlabel}** — 기준 {tbase} · 상위 {ttop} (기준 문서 §0·§2) |")
-    w(f"| 기준 문서 | `00-정의-및-최적화-기준.md` v1.2 |")
+    w(f"| 기준 문서 | `00-정의-및-최적화-기준.md` v1.3 |")
     w(f"| 32항목 충족 | {ok} / 32 (입력 {filled}) — P0 {n_p0} · P1 {n_p1} · P2 {n_p2} 건 보완 필요 |")
     w(f"| 한 줄 결론 | _(9영역 판정을 보고 매장 유형을 한 줄로 쓴다 — 기준 문서 §1-5)_ |")
     w("")
@@ -366,8 +366,8 @@ def render(name, snap, btype, metrics, checks):
         fb = f"{b:,.2f}" if k == "평점" else f"{b:,.0f}"
         if isinstance(v, float):
             fv = f"{v:,.2f}" if k == "평점" else f"{v:,.0f}"
-            fg = f"{gap:+,.2f}" if k == "평점" else f"{gap:+,.0f}"
-            fr = f"{rate:.1f}%"
+            fg = ("" if gap == "" else (f"{gap:+,.2f}" if k == "평점" else f"{gap:+,.0f}"))
+            fr = "" if rate == "" else f"{rate:.1f}%"
         else:
             fv, fg, fr = v, "", ""
         est = " (추정)" if metrics.get(k, {}).get("est") else ""
@@ -395,7 +395,8 @@ def render(name, snap, btype, metrics, checks):
     disc = metrics.get("첫방문 할인율", {}).get("raw", "")
     if disc:
         w("")
-        w(f"- 첫방문 할인율: {disc} — 기준 30%(A 이가자) / 50%(B 로한) / 로컬 1차 목표 30% 매장 통일. {'범위 표기 → 디자이너별 상이 → 매장 통일 필요 (P0)' if '~' in disc else ''}")
+        std = "상위 가격대 권장 20~30% 조건결합 (50% 비권장)" if btype == "프리미엄" else "기준 30%(A 이가자) / 50%(B 로한) / 로컬 1차 목표 30% 매장 통일"
+        w(f"- 첫방문 할인율: {disc} — {std}. {'범위 표기 → 디자이너별 상이 → 매장 통일 필요 (P0)' if '~' in disc else ''}")
     w("")
     w("## 2. 9개 영역 판정")
     w("")
